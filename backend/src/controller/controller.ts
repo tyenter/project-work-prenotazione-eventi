@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { EventsService } from '../service/service';
-import { IPaginationQuery } from '../models/models';
-import { paginationSchema } from './joiSchema';
+import { IEvent, IEventsRes, IPaginationQuery } from '../models/models';
+import { objectIdSchema, paginationSchema } from './joiSchema';
 import { BadRequest, InternalServerError } from '../errors/errors';
 
 
@@ -9,7 +9,7 @@ export class EventsController {
 
     private eventsService = new EventsService()
 
-    public getAllEvents = async (req: Request, res: Response, next: NextFunction) => {
+    public getAllEvents = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try{
             const pagination: IPaginationQuery = req.query
 
@@ -17,12 +17,12 @@ export class EventsController {
             if(error)
                 throw new BadRequest("invalid parameters")
             
-            const events = await this.eventsService.getEvents(pagination)
+            const events: IEventsRes | undefined = await this.eventsService.getEvents(pagination)
 
             if(events === undefined)
                 throw new InternalServerError("internal server error")
 
-            res.json(events)
+            res.status(200).json(events)
 
         }catch(err){
             console.error("Error: ",err)
@@ -30,15 +30,17 @@ export class EventsController {
         }
     }
 
-    public getEventById(req: Request, res: Response, next: NextFunction) {
+    public getSingleEventById = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
         try{
             const id: string | undefined = req.params.event_id
             
-            // to-do: controllo validità id (esadecimale 24?)
+            const {error} = objectIdSchema.validate(id)
+            if(error)
+                throw new BadRequest("invalid id")
 
-            // this.eventsService.getEventById()
+            const event: IEvent | undefined = await this.eventsService.getEventById( id! )
 
-            res.json("you visited /eventi/:id")
+            res.status(200).json(event)
         }catch(err){
             console.error("ERROR: ",err)
             next(err)
