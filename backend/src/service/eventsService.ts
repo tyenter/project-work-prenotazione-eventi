@@ -3,7 +3,6 @@ import { COLLECTION_EVENTI } from '../config';
 import { connectDB } from '../db';
 import { IEvent, IEventsRes, IPagination, IPaginationQuery } from '../models/models';
 import { NotFound } from '../errors/errors';
-import { errorHandler } from '../errors/errorHandler';
 
 export class EventsService {
     

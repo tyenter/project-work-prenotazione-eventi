@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { EventsService } from '../service/service';
+import { EventsService } from '../service/eventsService';
 import { IEvent, IEventsRes, IPaginationQuery } from '../models/models';
-import { objectIdSchema, paginationSchema } from './joiSchema';
+import { objectIdSchema, paginationSchema } from './joiSchemas';
 import { BadRequest, InternalServerError } from '../errors/errors';
 
 
