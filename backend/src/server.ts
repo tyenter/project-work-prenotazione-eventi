@@ -1,6 +1,7 @@
 import express from 'express';
 import {PORT} from './config'
 import eventsRouter from './router/router';
+import { errorHandler } from './errors/errorHandler';
 
 const app = express();
 
@@ -9,3 +10,5 @@ app.listen(PORT, () => {
 });
 
 app.use("/eventi", eventsRouter)
+
+app.use(errorHandler)
