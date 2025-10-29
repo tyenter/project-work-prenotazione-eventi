@@ -7,7 +7,7 @@ import { errorHandler } from '../errors/errorHandler';
 
 export class EventsService {
     
-    public async getEvents(pagination: IPaginationQuery): Promise<IEventsRes | undefined>{
+    public async getEvents(pagination: IPaginationQuery): Promise<IEventsRes>{
         const db = await connectDB()
         const eventsColletion = db.collection<IEvent>(COLLECTION_EVENTI);
 
@@ -39,7 +39,7 @@ export class EventsService {
 
     }
 
-    public async getEventById(id: string): Promise <IEvent | undefined>{
+    public async getEventById(id: string): Promise <IEvent>{
         const db = await connectDB()
         const eventsColletion = db.collection<IEvent>(COLLECTION_EVENTI);
 

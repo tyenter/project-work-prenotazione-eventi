@@ -17,13 +17,9 @@ export class EventsController {
             if(error)
                 throw new BadRequest("invalid parameters")
             
-            const events: IEventsRes | undefined = await this.eventsService.getEvents(pagination)
-
-            if(events === undefined)
-                throw new InternalServerError("internal server error")
+            const events: IEventsRes = await this.eventsService.getEvents(pagination)
 
             res.status(200).json(events)
-
         }catch(err){
             console.error("Error: ",err)
             next(err)
