@@ -14,10 +14,10 @@ export interface IPaginationQuery {
 
 export interface IEvent extends WithId<Document> {
     date: Date
-    title: string,
-    description: string,
-    people: number,
-    geoLocation: string,
+    title: string
+    description: string
+    people: number
+    geoLocation: string
     category: string // maybe enum
 }
 
