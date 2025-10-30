@@ -21,7 +21,7 @@ export class EventsController {
 
             res.status(200).json(events)
         }catch(err){
-            console.error("Error: ",err)
+            console.error("Event Error: ",err)
             next(err)
         }
     }
@@ -38,7 +38,7 @@ export class EventsController {
 
             res.status(200).json(event)
         }catch(err){
-            console.error("ERROR: ",err)
+            console.error("Event Error: ",err)
             next(err)
         }
     }

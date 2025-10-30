@@ -1,5 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
-import { DATABASE_NAME, MONGO_URI } from './config';
+import { COLLECTION_CREDS, DATABASE_NAME, MONGO_URI } from './config';
 
 const client = new MongoClient(MONGO_URI);
 
@@ -10,6 +10,9 @@ export const connectDB = async (): Promise<Db> => {
 
   await client.connect();
   db = client.db(DATABASE_NAME); 
+  const credsCollection = db.collection(COLLECTION_CREDS)
+  await credsCollection.createIndex({ email: 1 }, { unique: true });
+
   console.log('MongoDB connected');
   return db;
 };

@@ -22,6 +22,22 @@ export interface IEvent extends WithId<Document> {
 }
 
 export interface IEventsRes {
-    data: IEvent[],
+    data: IEvent[]
     pagination: IPagination
+}
+
+export interface ICredentials {
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+    refreshToken?: string
+}
+
+export interface IUserInfoPOST {
+    // username: string
+    firstName: string
+    lastName: string
+    email: string
+    password: string
 }
