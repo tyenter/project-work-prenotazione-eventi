@@ -18,14 +18,6 @@ export const credsSchema = Joi.object({
 })
 
 export const userInfoSchema = Joi.object({
-  /*
-  username: Joi
-    .string()
-    .regex(/^[a-zA-Z0-9_\-]+$/)
-    .min(5)
-    .max(20)
-    .required(),
-  */
   firstName: Joi
     .string()
     .trim()

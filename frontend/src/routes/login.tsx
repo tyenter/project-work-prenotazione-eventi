@@ -83,6 +83,7 @@ function Login(){
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
                         error={!field.state.meta.isValid}
+                        type="password"
                     />
                     <span style={{color: "red"}}>
                         {field.state.meta.errors[0]?.message}
@@ -98,12 +99,6 @@ function Login(){
                 Login
             </Button>
 
-            {/* TMP */}
-            <Button
-            onClick={()=>console.log(form.state)}
-            >
-                click
-            </Button>
         </div>
     </>)
 }

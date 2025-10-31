@@ -27,7 +27,6 @@ dist-ssr
 *.env
 
 #keys
-
 certs/
 *.key
 *.crt
