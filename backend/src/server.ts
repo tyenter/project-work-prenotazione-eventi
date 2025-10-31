@@ -7,6 +7,7 @@ import fs from "fs";
 import https from "https";
 import helmet from 'helmet';
 import cookieParser from "cookie-parser";
+import cors from "cors"
 
 const app = express();
 
@@ -25,12 +26,12 @@ https.createServer(options, app).listen(PORT, () => {
   console.log(`HTTPS server running on https://localhost:${PORT}`);
 });
 
-/*
+
 app.use(cors({
-  origin: "http://localhost:3001", // frontend url
+  origin: "https://localhost:5173", 
   credentials: true                
 }));
-*/
+
 
 app.use("/eventi", eventsRouter)
 app.use("/auth", authRouter)

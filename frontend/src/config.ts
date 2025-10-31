@@ -1,0 +1,1 @@
+export const ALLOWED_TLDS = import.meta.env.VITE_ALLOWED_TLDS?.split(',') || []
