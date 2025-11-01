@@ -1,0 +1,6 @@
+export type TLoginError = 
+| "NETWORK_ERROR"
+| "INVALID_CREDENTIALS"
+| "SERVER_ERROR"
+| "BAD_REQUEST"
+| "AXIOS_ERROR"

@@ -1,16 +1,19 @@
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Alert } from '@mui/material';
 import { formOptions, useForm } from '@tanstack/react-form';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import z from 'zod';
-import { ALLOWED_TLDS } from '../config';
-import { login } from '../api/authApi';
-
+import { useLogin } from '../hooks/useLogin';
+import type { TLoginError } from '../models/models';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/login')({
   component: Login,
 });
 
-function Login(){
+function Login({from}:{from?: string}){
+    const navigate = useNavigate();
+    const [alert, setAlert] = useState<string>()
+    const login = useLogin()
 
     interface User {
         email: string
@@ -22,25 +25,8 @@ function Login(){
         defaultValues: defaultUser,
         validators: {
             onSubmit: z.object({
-                email: z 
-                    .email("email non valida")
-                    .refine(email => {
-                        const tld = email.split('.').pop()?.toLowerCase()
-                        return tld && ALLOWED_TLDS.includes(tld)
-                    }, {
-                        message: "email non valida"
-                    }),
-                password: z
-                    .string()   
-                    .min(8,"minimo 8 caratteri")
-                    .max(128,"massimo 128 caratteri")
-                    .regex(/(?=.*[a-z])/,"almeno 1 lettera minuscola")
-                    .regex(/(?=.*[A-Z])/,"almeno 1 lettera maiuscola")
-                    .regex(/(?=.*[0-9])/,"almeno 1 numero")
-                    .regex(
-                        /(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>\/?])/
-                        ,"almeno 1 carattere speciale (!@#$%^&*()_+-=[]{};':\"\\|,.<>/?)"
-                    )
+                email: z.email("email non valida"),
+                password: z.string()
             })
         }
     })
@@ -48,8 +34,21 @@ function Login(){
     const form = useForm({
         ...formOpts,
         onSubmit: async ({ value }) => {
-            await login(value.email,value.password)
+            const error: TLoginError | undefined = 
+                await login(value.email,value.password)
+
+            if(error){
+                if(error === "INVALID_CREDENTIALS")
+                    setAlert("Login fallito: Credenziali errate")
+                else if(error === "NETWORK_ERROR")
+                    setAlert("Login fallito: Errore di rete")
+                else
+                    setAlert("Login fallito: Errore inaspettato. Riprova più tardi")
+
+                return
+            }
             
+            navigate({ to: `/eventi` })
         },
     })
 
@@ -59,6 +58,15 @@ function Login(){
         <div className='loginContainer'>
 
             <h3>LOGIN</h3>
+
+            {   alert &&   
+                <Alert 
+                    onClose={()=> setAlert(undefined)} 
+                    severity="error"
+                >
+                    {alert}
+                </Alert>
+            }
 
             <form.Field
                 name="email"
@@ -70,7 +78,7 @@ function Login(){
                         error={!field.state.meta.isValid}
                     />
                     <span style={{color: "red"}}>
-                        {field.state.meta.errors[0]?.message}
+                        {field.state.meta.errors[0]?.message} 
                     </span>
                 </>)}
             />
@@ -91,13 +99,21 @@ function Login(){
                 </>)}
             />
 
-            <Button 
-                variant="contained"
-                type="submit"
-                onClick={form.handleSubmit}
-            >
-                Login
-            </Button>
+            <form.Subscribe
+                selector={(state) => state.canSubmit}
+                children={(canSubmit)=>{
+                    return (<>
+                        <Button 
+                            variant="contained"
+                            type="submit"
+                            onClick={form.handleSubmit}
+                            disabled={!canSubmit}
+                        >
+                            Login
+                        </Button>
+                    </>)
+                }}
+            />
 
         </div>
     </>)

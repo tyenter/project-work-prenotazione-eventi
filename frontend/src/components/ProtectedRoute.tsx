@@ -1,3 +1,4 @@
+/*
 import { useEffect, useState, type JSX } from 'react';
 import { refreshAccessToken } from '../api/authApi';
 import { useNavigate } from '@tanstack/react-router';
@@ -22,3 +23,4 @@ export default function ProtectedRoute({ children }: { children: JSX.Element }) 
   if (!authorized) return <div>Loading...</div>;
   return children;
 }
+*/

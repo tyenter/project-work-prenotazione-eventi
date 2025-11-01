@@ -22,7 +22,7 @@ export class AuthController {
             }
             const {error} = credsSchema.validate(credentials)
             if(error)
-                throw new BadRequest("email or password don't meet requirements")
+                throw new Unauthorized("invalid credentials")
 
             const {accessToken, refreshToken} =
                 await this.authService.handleLogin(credentials.email,credentials.password)

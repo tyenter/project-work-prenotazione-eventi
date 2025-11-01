@@ -90,7 +90,7 @@ export class AuthService {
             { $set: { refreshToken: newHashedRefreshToken } }
         );
 
-        if(result.matchedCount === 0 || result.modifiedCount === 0)
+        if(result.matchedCount === 0)
             throw new InternalServerError("internal server error")
 
         return {accessToken, newRefreshToken}
