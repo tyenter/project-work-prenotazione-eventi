@@ -66,7 +66,7 @@ export class EventsController {
 
     public bookingCheck = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
         try{
-            const {eventId} = req.body
+            const eventId = req.params.event_id
 
             const {error} = objectIdSchema.validate(eventId,{ stripUnknown: true })
             if(error)
@@ -76,7 +76,7 @@ export class EventsController {
             if(!userId)
                 throw new BadRequest("invalid user id")
 
-            const isBooked = await this.eventsService.bookedCheck(eventId, userId)
+            const isBooked = await this.eventsService.bookedCheck(eventId!, userId)
 
             res.status(200).json({isBooked})
         }catch(err){
