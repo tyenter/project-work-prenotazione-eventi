@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { credsSchema, refreshTokenSchema, userInfoSchema } from './joiSchemas';
 import { BadRequest, Unauthorized } from '../errors/errors';
 import { AuthService } from '../service/authService';
-import { IUserInfoPOST } from '../models/models';
 
 
 export class AuthController {
@@ -20,7 +19,7 @@ export class AuthController {
                 email: req.body.email,
                 password: req.body.password
             }
-            const {error} = credsSchema.validate(credentials)
+            const {error} = credsSchema.validate(credentials,{ stripUnknown: true })
             if(error)
                 throw new Unauthorized("invalid credentials")
 

@@ -38,3 +38,8 @@ export const refreshTokenSchema = Joi
   .string()
   .regex(/^[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+$/) 
   .required()
+
+export const bookEventSchema = Joi.object({
+  eventId: objectIdSchema,
+  people: Joi.number().integer().min(1).max(3).required()
+})

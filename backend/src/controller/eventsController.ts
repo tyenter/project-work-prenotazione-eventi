@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { EventsService } from '../service/eventsService';
 import { IEvent, IEventsRes, IPaginationQuery } from '../models/models';
-import { objectIdSchema, paginationSchema } from './joiSchemas';
+import { bookEventSchema, objectIdSchema, paginationSchema } from './joiSchemas';
 import { BadRequest, InternalServerError } from '../errors/errors';
 
 
@@ -42,4 +42,27 @@ export class EventsController {
             next(err)
         }
     }
+
+    public bookEvent = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try{
+            const {eventId,people} = req.body
+
+            const {error} = bookEventSchema.validate({eventId,people},{ stripUnknown: true })
+            if(error)
+                throw new BadRequest("invalid body")
+
+            const userId: string | undefined = req.user?.sub
+
+            if(!userId)
+                throw new BadRequest("invalid user id")
+
+            await this.eventsService.bookEventForUser(eventId, people, userId)
+
+            res.status(200).json(eventId)
+        }catch(err){
+            console.error("Booking Error: ",err)
+            next(err)
+        }
+    }
+
 }

@@ -41,3 +41,11 @@ export interface IUserInfoPOST {
     email: string
     password: string
 }
+
+export interface IBookings{
+    userId: string,
+    eventsBooked: {
+        eventId: string,
+        people: number
+    }[]
+}

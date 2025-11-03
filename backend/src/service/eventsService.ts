@@ -1,8 +1,8 @@
-import { ObjectId } from 'mongodb';
-import { COLLECTION_EVENTI } from '../config';
+import { ObjectId, WithId } from 'mongodb';
+import { COLLECTION_BOOKINGS, COLLECTION_EVENTI } from '../config';
 import { connectDB } from '../db';
-import { IEvent, IEventsRes, IPagination, IPaginationQuery } from '../models/models';
-import { NotFound } from '../errors/errors';
+import { IBookings, IEvent, IEventsRes, IPagination, IPaginationQuery } from '../models/models';
+import { BadRequest, InternalServerError, NotFound } from '../errors/errors';
 
 export class EventsService {
     
@@ -26,10 +26,10 @@ export class EventsService {
 
         const events: IEvent[] = await eventsColletion
                             .find()
+                            .sort({ date: -1 })
                             .skip((fullPagination.page - 1) * fullPagination.size)
                             .limit(fullPagination.size)
                             .toArray()
-        // add sort by date
 
         return {
             data: events,
@@ -51,6 +51,28 @@ export class EventsService {
             throw new NotFound("event not found")
 
         return event as IEvent
+    }
+
+    public async bookEventForUser(eventId: string, people: number, userId: string): Promise <void>{
+        const db = await connectDB()
+        const bookingsCollection = db.collection<IBookings>(COLLECTION_BOOKINGS);
+
+        const resp:  WithId<IBookings> | null = await bookingsCollection.findOne({userId})
+
+        if(resp){
+            if(resp.eventsBooked.find(ev => ev.eventId === eventId))
+                throw new BadRequest("event already booked")
+
+            const result = await bookingsCollection.updateOne(
+                {userId}, 
+                { $set: { eventsBooked: [{eventId,people}, ...resp.eventsBooked] } }
+            )
+
+            if(result.matchedCount === 0)
+                throw new InternalServerError("internal server error")
+        }
+        else
+            await bookingsCollection.insertOne({userId: userId, eventsBooked: [{eventId,people}]})
     }
 
 }

@@ -11,7 +11,8 @@
     "target": "ES2020",               
     "moduleResolution": "node",       
     "esModuleInterop": true,
-    "types": [],
+    "types": ["node", "express"],
+    "typeRoots" : ["./src/types", "./node_modules/@types"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -42,5 +43,7 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "include": ["src"]
+
 }
