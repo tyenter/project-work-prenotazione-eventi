@@ -15,3 +15,8 @@ export interface IEvent {
     geoLocation: string
     category: string // maybe enum
 }
+
+export interface IBookEvent {
+    eventId: string,
+    people: number
+  }

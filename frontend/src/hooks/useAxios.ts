@@ -1,48 +1,47 @@
-import type { AxiosInstance } from 'axios';
-import { useMemo } from 'react';
 import { useAuth } from './useAuth';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
+import type { AxiosInstance } from 'axios';
+
+import { useEffect } from 'react';
 
 export const useAxios = (): AxiosInstance => {
-  const { accessToken, setAccessToken} = useAuth();
+  const { accessToken, setAccessToken } = useAuth();
 
-  return useMemo(() => {
-    const client = axios.create({
-      baseURL: 'https://localhost:8443',
-      withCredentials: true,
-    });
-
-    client.interceptors.request.use((config) => {
+  useEffect(() => {
+    const reqInterceptor = axiosClient.interceptors.request.use((config) => {
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
       return config;
     });
 
-    client.interceptors.response.use(
-      res => res,
+    const resInterceptor = axiosClient.interceptors.response.use(
+      (response) => response,
       async (error) => {
         const originalRequest = error.config;
 
-        if (
-          error.response?.status === 401 &&
-          !originalRequest._retry &&
-          originalRequest.url !== '/auth/login'
-        ) {
+        if (originalRequest._retry || originalRequest.url === '/auth/refresh') {
+          return Promise.reject(error);
+        }
+
+        if (error.response?.status === 401) {
           originalRequest._retry = true;
 
           try {
-            const { data } = await client.post('/auth/refresh', {}, { withCredentials: true });
+            const { data } = await axiosClient.post('/auth/refresh', {}, { withCredentials: true });
+
             if (!data?.accessToken) {
               setAccessToken(null);
               return Promise.reject(new Error('No access token returned from refresh'));
             }
+            
             setAccessToken(data.accessToken);
-            originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
-            return client(originalRequest);
-          } catch {
-            setAccessToken(null); 
-            return Promise.reject(error);
+
+            originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+            return axiosClient(originalRequest);
+          } catch (refreshError) {
+            setAccessToken(null);
+            return Promise.reject(refreshError);
           }
         }
 
@@ -50,9 +49,11 @@ export const useAxios = (): AxiosInstance => {
       }
     );
 
-    return client;
-  }, [accessToken]);
+    return () => {
+      axiosClient.interceptors.request.eject(reqInterceptor);
+      axiosClient.interceptors.response.eject(resInterceptor);
+    };
+  }, [accessToken, setAccessToken]);
+
+  return axiosClient;
 };
-
-
-

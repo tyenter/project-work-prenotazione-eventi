@@ -1,6 +1,5 @@
-// AuthProvider.tsx
-import axios from 'axios';
 import { type PropsWithChildren ,createContext, useState, useEffect } from 'react';
+import axiosClient from '../api/axiosClient';
 
 interface AuthContextType {
   accessToken: string | null;
@@ -16,11 +15,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
   // durante l'avvio, cerco di ricaricare l'access token 
   // usando il cookie HttpOnly
   useEffect(() => {
-    const axiosClient = axios.create({
-        baseURL: 'https://localhost:8443',
-        withCredentials: true,
-    });
-
     const refresh = async () => {
       try {
         const { data } = await axiosClient.post(
@@ -38,7 +32,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     refresh();
   }, []);
 
-  const value = { accessToken, setAccessToken };
+  const value = { accessToken, setAccessToken};
 
   if (loading) return <div>Caricamento...</div>;
 
