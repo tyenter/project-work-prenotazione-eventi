@@ -64,9 +64,9 @@ function RouteComponent() {
       children={(field) => (<>
       <div style={{width: 110}}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Persone</InputLabel>
+          <InputLabel id="peopleSelectLabel">Persone</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
+            labelId="peopleSelectLabel"
             id="peopleSelect"
             value={field.state.value}
             label="Persone"
