@@ -57,7 +57,7 @@ export class EventsController {
 
             await this.eventsService.bookEventForUser(eventId, people, userId)
 
-            res.status(200).json("booking successful")
+            res.sendStatus(200)
         }catch(err){
             console.error("Booking Error: ",err)
             next(err)

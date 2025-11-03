@@ -12,6 +12,8 @@ export class AuthService {
     public async handleLogin(email: string,password: string){
         const db = await connectDB()
         const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS);
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 giorni
 
         const normalizedEmail = email.toLowerCase()
 
@@ -32,7 +34,12 @@ export class AuthService {
         
         const result = await credsColletion.updateOne(
             { _id: user._id}, 
-            { $set: { refreshToken: hashedRefreshToken } }
+            { $set: { 
+                refreshToken: {
+                    token: hashedRefreshToken,
+                    expiresAt
+                }
+            }}
         );
 
         if(result.matchedCount === 0 || result.modifiedCount === 0)
@@ -44,6 +51,8 @@ export class AuthService {
     public async handleSignup(userInfo: IUserInfoPOST){
         const db = await connectDB()
         const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS); 
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 giorni
 
         let newUser: ICredentials = {
             email: userInfo.email.toLowerCase(),
@@ -61,7 +70,12 @@ export class AuthService {
         
         const result = await credsColletion.updateOne(
             { _id: insertedId}, 
-            { $set: { refreshToken: hashedRefreshToken } }
+            { $set: { 
+                refreshToken: {
+                    token: hashedRefreshToken,
+                    expiresAt
+                }
+            }}
         );
 
         if(result.matchedCount === 0 || result.modifiedCount === 0)
@@ -73,11 +87,13 @@ export class AuthService {
     public async handleRefresh(refreshToken: string){
         const db = await connectDB()
         const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS);
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 giorni
 
         const hashedRefreshToken = this.hashToken(refreshToken)
 
-        const user: WithId<ICredentials> | null = await credsColletion.findOne({ refreshToken: hashedRefreshToken });
-        if (!user)
+        const user: WithId<ICredentials> | null = await credsColletion.findOne({ "refreshToken.token": hashedRefreshToken });
+        if (!user || !user.refreshToken?.expiresAt || now > user.refreshToken.expiresAt)
             throw new Unauthorized("invalid refresh token")
 
         // token valido -> creo nuovi token e immagazzino nuovo refresh token nel DB
@@ -87,13 +103,43 @@ export class AuthService {
 
         const result = await credsColletion.updateOne(
             { _id: user._id },
-            { $set: { refreshToken: newHashedRefreshToken } }
+            { $set: { 
+                refreshToken: {
+                    token: newHashedRefreshToken,
+                    expiresAt
+                }
+            }}
         );
 
         if(result.matchedCount === 0)
             throw new InternalServerError("internal server error")
 
         return {accessToken, newRefreshToken}
+    }
+
+    public async handleLogout(refreshToken: string){
+        const db = await connectDB()
+        const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS);
+
+        const hashedRefreshToken = this.hashToken(refreshToken)
+
+        const user: WithId<ICredentials> | null = await credsColletion.findOne({ refreshToken: {token: hashedRefreshToken} });
+        if (!user)
+            throw new Unauthorized("invalid refresh token")
+
+        const result = await credsColletion.updateOne(
+            { _id: user._id },
+            { $set: { 
+                refreshToken: {
+                    token: "",
+                    expiresAt: new Date()
+                }
+            }}
+        );
+
+        if(result.matchedCount === 0)
+            throw new InternalServerError("internal server error")
+
     }
 
     private hashToken(token: string){

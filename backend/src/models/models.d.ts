@@ -31,7 +31,10 @@ export interface ICredentials {
     password: string
     firstName: string
     lastName: string
-    refreshToken?: string
+    refreshToken?: {
+        token: string
+        expiresAt: Date
+    }
 }
 
 export interface IUserInfoPOST {

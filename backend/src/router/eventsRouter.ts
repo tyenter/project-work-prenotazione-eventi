@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { EventsController } from '../controller/eventsController';
-import { authenticateToken } from '../controller/tokenVerifier';
+import { authenticateToken } from '../middleware/tokenVerifier';
 
 const eventsRouter: Router = Router();
 const eventsController = new EventsController();

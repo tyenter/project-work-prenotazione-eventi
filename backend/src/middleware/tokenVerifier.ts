@@ -1,6 +1,6 @@
 import { NextFunction, Router, Request, Response } from 'express';
 import { JWT_ACCESS_SECRET } from '../config';
-import jwt from "jsonwebtoken";
+import jwt, {VerifyErrors} from "jsonwebtoken";
 
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
