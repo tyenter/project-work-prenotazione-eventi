@@ -33,7 +33,7 @@ export const authenticateMe = (typeOfAuth: TypeOfAuth) => {
     } catch (err) {
       if (axios.isAxiosError(err)){
         if (err.response) {
-          if(err.response.status === 401) return "INVALID_CREDENTIALS"
+          if(err.response.status === 401 || err.response.status === 400) return "INVALID_CREDENTIALS"
           else if (err.response.status === 400) return "BAD_REQUEST"
           else return "SERVER_ERROR"
         } 

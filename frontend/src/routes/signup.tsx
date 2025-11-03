@@ -76,10 +76,12 @@ function Signup(){
               })
 
           if(error){
-              if(error === "NETWORK_ERROR")
-                  setAlert("Signup fallito: Errore di rete")
+              if(error === "INVALID_CREDENTIALS")
+                setAlert("Signup fallito: Credenziali invalide")
+              else if(error === "NETWORK_ERROR")
+                setAlert("Signup fallito: Errore di rete")
               else
-                  setAlert("Signup fallito: Errore inaspettato. Riprova più tardi")
+                setAlert("Signup fallito: Errore inaspettato. Riprova più tardi")
 
               return
           }
