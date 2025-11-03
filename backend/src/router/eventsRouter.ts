@@ -9,5 +9,6 @@ eventsRouter.get('/', eventsController.getAllEvents);
 eventsRouter.get('/:event_id', eventsController.getSingleEventById);
 
 eventsRouter.post('/book',authenticateToken, eventsController.bookEvent)
+eventsRouter.get('/book/check',authenticateToken, eventsController.bookingCheck)
 
 export default eventsRouter;

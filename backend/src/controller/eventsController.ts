@@ -46,7 +46,6 @@ export class EventsController {
     public bookEvent = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
         try{
             const {eventId,people} = req.body
-            let wasBooked: boolean = false
 
             const {error} = bookEventSchema.validate({eventId,people},{ stripUnknown: true })
             if(error)
@@ -56,17 +55,30 @@ export class EventsController {
             if(!userId)
                 throw new BadRequest("invalid user id")
 
-            // ?check per controllo invece che inserimento
-            const {check} = req.query
-            if(check || check === '')
-                wasBooked = await this.eventsService.bookedCheck(eventId, userId)
-            else
-                await this.eventsService.bookEventForUser(eventId, people, userId)
+            await this.eventsService.bookEventForUser(eventId, people, userId)
 
-            if(wasBooked !== undefined)
-                res.status(200).json({wasBooked})
-            else
-                res.status(200)
+            res.status(200).json("booking successful")
+        }catch(err){
+            console.error("Booking Error: ",err)
+            next(err)
+        }
+    }
+
+    public bookingCheck = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try{
+            const {eventId} = req.body
+
+            const {error} = objectIdSchema.validate(eventId,{ stripUnknown: true })
+            if(error)
+                throw new BadRequest("invalid event id")
+
+            const userId: string | undefined = req.user?.sub
+            if(!userId)
+                throw new BadRequest("invalid user id")
+
+            const isBooked = await this.eventsService.bookedCheck(eventId, userId)
+
+            res.status(200).json({isBooked})
         }catch(err){
             console.error("Booking Error: ",err)
             next(err)
