@@ -75,4 +75,16 @@ export class EventsService {
             await bookingsCollection.insertOne({userId: userId, eventsBooked: [{eventId,people}]})
     }
 
+    public async bookedCheck(eventId: string, userId: string): Promise <boolean>{
+        const db = await connectDB()
+        const bookingsCollection = db.collection<IBookings>(COLLECTION_BOOKINGS);
+
+        const resp:  WithId<IBookings> | null = await bookingsCollection.findOne({userId})
+
+        if(resp?.eventsBooked.find(ev => ev.eventId === eventId))
+            return true
+
+        return false
+    }
+
 }

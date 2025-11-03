@@ -46,19 +46,27 @@ export class EventsController {
     public bookEvent = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
         try{
             const {eventId,people} = req.body
+            let wasBooked: boolean = false
 
             const {error} = bookEventSchema.validate({eventId,people},{ stripUnknown: true })
             if(error)
                 throw new BadRequest("invalid body")
 
             const userId: string | undefined = req.user?.sub
-
             if(!userId)
                 throw new BadRequest("invalid user id")
 
-            await this.eventsService.bookEventForUser(eventId, people, userId)
+            // ?check per controllo invece che inserimento
+            const {check} = req.query
+            if(check || check === '')
+                wasBooked = await this.eventsService.bookedCheck(eventId, userId)
+            else
+                await this.eventsService.bookEventForUser(eventId, people, userId)
 
-            res.status(200).json(eventId)
+            if(wasBooked !== undefined)
+                res.status(200).json({wasBooked})
+            else
+                res.status(200)
         }catch(err){
             console.error("Booking Error: ",err)
             next(err)
