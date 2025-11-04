@@ -170,7 +170,7 @@ export function ActionAreaCard({ evento }: { evento: IEvent }) {
     <Box>
       <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
       <Typography variant="body2" color="text.secondary">
-        { (evento.duration?.hours + "h" + (evento.duration?.minutes ? "":"m")) || "N/D"}
+        { (evento.duration?.hours + "h" + (evento.duration?.minutes ? `${evento.duration.minutes}m`:"")) || "N/D"}
       </Typography>
     </Box>
 
