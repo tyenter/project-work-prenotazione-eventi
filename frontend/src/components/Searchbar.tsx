@@ -16,7 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   return (
     <TextField
-      label="Search"
+      label="Cerca"
       variant="outlined"
       fullWidth
       value={searchTerm}
