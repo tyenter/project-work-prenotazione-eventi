@@ -14,17 +14,15 @@ export interface IEventsQuery {
 }
 
 export interface IEvent extends WithId<Document> {
+    date: Date
     title: string
     description: string
-    date: string
+    people: number
+    duration : {hours:number,
+                minutes:number}
     address: string
-    duration: {
-        hours: number
-        minutes: number
-    }
-    city: string
+    category: string 
     short_description: string
-    category: string
 }
 
 export interface IEventsRes {
