@@ -13,6 +13,7 @@ export interface IEvent {
     date: string;
     address: string;
     duration: {hours:number, minutes:number};
+    people: number,
     city: string;
     short_description:string;
     category:string

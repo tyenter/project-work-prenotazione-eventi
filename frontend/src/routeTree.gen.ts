@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventiIndexRouteImport } from './routes/eventi/index'
 import { Route as EventiEventoIdRouteImport } from './routes/eventi/$eventoId'
@@ -23,6 +24,10 @@ const SignupRoute = SignupRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +63,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/eventi/$eventoId': typeof EventiEventoIdRoute
@@ -68,11 +74,19 @@ export interface FileRouteTypes {
   fullPaths: '/' | '/login' | '/signup' | '/eventi/$eventoId' | '/eventi'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/login' | '/signup' | '/eventi/$eventoId' | '/eventi'
-  id: '__root__' | '/' | '/login' | '/signup' | '/eventi/$eventoId' | '/eventi/'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/login'
+    | '/signup'
+    | '/eventi/$eventoId'
+    | '/eventi/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   EventiEventoIdRoute: typeof EventiEventoIdRoute
@@ -93,6 +107,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -121,6 +142,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   EventiEventoIdRoute: EventiEventoIdRoute,

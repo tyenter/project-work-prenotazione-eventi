@@ -1,6 +1,6 @@
 import { Button, TextField, Alert } from '@mui/material';
 import { formOptions, useForm } from '@tanstack/react-form';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import z from 'zod';
 import { authenticateMe } from '../hooks/authenticateMe';
 import type { TLoginError } from '../models/models';
@@ -8,6 +8,10 @@ import { useState } from 'react';
 import { ALLOWED_TLDS } from '../config';
 
 export const Route = createFileRoute('/signup')({
+  beforeLoad: ({ context }) => {
+    if (context.accessToken)
+      throw redirect({to: '/eventi'})
+  },
   component: Signup,
 })
 

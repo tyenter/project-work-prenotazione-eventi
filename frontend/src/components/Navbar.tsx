@@ -13,27 +13,29 @@ const Navbar = () => {
         <Button color="inherit" onClick={()=>navigate({to: "/eventi"})}>
           Home
         </Button>
-        
-        {   !accessToken ?
-           <Button color="inherit" onClick={()=>navigate({to: "/login"})}>
-                Login
-            </Button>
+        {  !accessToken ?
+          <Button color="inherit" onClick={()=>navigate({to: "/login"})}>
+            Login
+          </Button>
             :<></>
         }
-         {   !accessToken ?
-        <Button color="inherit" onClick={()=>navigate({to: "/signup"})}>
-          Registrati
-        </Button>
-        :<></>
-         }
-        {   accessToken ?
-            <Button color="inherit" onClick={async () => {
-                await logout()
-                navigate({to: "/eventi"})
-            }}>
-                Logout
-            </Button>
-            :<></>
+        { !accessToken ?
+          <Button color="inherit" onClick={()=>navigate({to: "/signup"})}>
+            Registrati
+          </Button>
+          :<></>
+        }
+        { accessToken ?
+          <Button 
+            color="inherit" 
+            onClick={async () => {
+              await logout()
+              navigate({to: "/eventi"})
+            }}
+          >
+            Logout
+          </Button>
+          :<></>
         }
       </Toolbar>
     </AppBar>
