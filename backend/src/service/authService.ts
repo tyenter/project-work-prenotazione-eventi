@@ -123,7 +123,7 @@ export class AuthService {
 
         const hashedRefreshToken = this.hashToken(refreshToken)
 
-        const user: WithId<ICredentials> | null = await credsColletion.findOne({ refreshToken: {token: hashedRefreshToken} });
+        const user: WithId<ICredentials> | null = await credsColletion.findOne({ "refreshToken.token": hashedRefreshToken });
         if (!user)
             throw new Unauthorized("invalid refresh token")
 
