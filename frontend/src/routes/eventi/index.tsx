@@ -59,10 +59,31 @@ function RouteComponent() {
   const pagination = data?.pagination;
 
   return (<>
-    <SearchBar
-      onSearch={(searchTerm) => setTitle(searchTerm)}
-    />
+    <Box
+  sx={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "2rem 1rem 1rem 1rem",
+    textAlign: "center",
+  }}
+>
+  <Typography
+    variant="h4"
+    sx={{
+      fontWeight: "bold",
+      color: "#1e1e1e",
+      marginBottom: "1rem",
+    }}
+  >
+    Cerca il tuo evento
+  </Typography>
 
+  <Box sx={{ width: "100%", maxWidth: "600px" }}>
+    <SearchBar onSearch={(searchTerm) => setTitle(searchTerm)} />
+  </Box>
+</Box>
     <div
       style={{
         minHeight: "100vh",
