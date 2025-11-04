@@ -3,35 +3,60 @@ import { useUseQueries } from "../../hooks/useUseQueries";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { Button, Box } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceIcon from "@mui/icons-material/Place";
+import { useState } from "react";
+import SearchBar from "../../components/Searchbar";
+import type { EventsQueryParams } from "../../models/models";
 
 export const Route = createFileRoute("/eventi/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [page, setPage] = React.useState(1);
-  const eventiPerPagina = 6; 
+  const eventsPerPage = 6
+  const [params, setParams] = useState<EventsQueryParams>({page: 1, size: eventsPerPage});
+  const [title, setTitle] = useState<string>('');
 
   const { useGetEvents } = useUseQueries();
-  const { data, isLoading } = useGetEvents({ page, size: eventiPerPagina });
+  const { data, isLoading } = useGetEvents(params);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
+  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setParams((state) => ({
+      ...state,
+      page: value
+    }));
   };
+
+  React.useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      setParams((state) => ({
+        ...state,
+        page: 1,
+        title: title, 
+      }));
+    }, 500); 
+
+    return () => {
+      clearTimeout(debounceTimeout); 
+    };
+  }, [title]); 
+
 
   if (isLoading) return <>Caricamento...</>;
 
   const eventi = data?.data || [];
   const pagination = data?.pagination;
 
-  return (
+  return (<>
+    <SearchBar
+      onSearch={(searchTerm) => setTitle(searchTerm)}
+    />
+
     <div
       style={{
         minHeight: "100vh",
@@ -39,9 +64,7 @@ function RouteComponent() {
         backgroundColor: "#f5f6fa",
       }}
     >
-      <Navbar />
 
-      {/* 🔹 Contenitore centrato delle card */}
       <div
         style={{
           display: "flex",
@@ -60,7 +83,6 @@ function RouteComponent() {
         ))}
       </div>
 
-      {/* 🔽 Paginazione  */}
       <Stack
         spacing={2}
         direction="row"
@@ -70,13 +92,13 @@ function RouteComponent() {
       >
         <Pagination
           count={pagination?.totPages || 1}
-          page={page}
+          page={params.page}
           onChange={handleChange}
           color="primary"
         />
       </Stack>
     </div>
-  );
+  </>);
 }
 
 type Evento = {
@@ -85,9 +107,11 @@ type Evento = {
   description: string;
   date: string;
   address?: string;
-  duration?: string;
+  duration?: {
+    hours: number,
+    minutes: number
+  };
   city?: string;
-  //image?: string;
 };
 
 export function ActionAreaCard({ evento }: { evento: Evento }) {
@@ -127,7 +151,7 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
           <Box textAlign="center">
             <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 30 }} />
             <Typography variant="body2" color="text.secondary">
-              {evento.duration || "N/D"}
+              { (evento.duration?.hours + "h" + (evento.duration?.minutes ? "":"m")) || "N/D"}
             </Typography>
           </Box>
 
@@ -142,7 +166,6 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
           </Box>
         </Box>
 
-        {/* 🔘 Bottone informazioni */}
         <Box display="flex" justifyContent="center" mt={2}>
           <Button
             variant="outlined"
@@ -164,32 +187,3 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
     </Card>
   );
 }
-
-const Navbar = () => (
-  <nav
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "1rem 2rem",
-      backgroundColor: "#2f3640",
-      color: "white",
-    }}
-  >
-    <div>
-      <h1 style={{ margin: 0 }}>EventiApp</h1>
-    </div>
-    <button
-      style={{
-        backgroundColor: "#00a8ff",
-        color: "white",
-        border: "none",
-        borderRadius: "5px",
-        padding: "0.5rem 1rem",
-        cursor: "pointer",
-      }}
-    >
-      Login
-    </button>
-  </nav>
-);

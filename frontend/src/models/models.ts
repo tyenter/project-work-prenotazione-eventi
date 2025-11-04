@@ -5,6 +5,11 @@ export type TLoginError =
 | "BAD_REQUEST"
 | "AXIOS_ERROR"
 
+export type EventsQueryParams = { 
+    page?: number; 
+    size?: number, 
+    title?: string 
+};
 
 export interface IEvent {
     _id: string
@@ -13,7 +18,7 @@ export interface IEvent {
     description: string
     people: number
     geoLocation: string
-    category: string // maybe enum
+    category: string 
 }
 
 export interface IEventsRes {
@@ -27,7 +32,8 @@ export interface IPagination {
     totPages: number
     totElems: number
 }
+
 export interface IBookEvent {
     eventId: string,
     people: number
-  }
+}
