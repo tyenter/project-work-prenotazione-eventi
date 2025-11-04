@@ -1,16 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useUseQueries } from "../../hooks/useUseQueries";
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import { Button, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Pagination,
+  Stack,
+  Button,
+  Box,
+} from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceIcon from "@mui/icons-material/Place";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import type { IEvent } from "../../models/models";
 
 
 export const Route = createFileRoute("/eventi/")({
@@ -19,7 +22,7 @@ export const Route = createFileRoute("/eventi/")({
 
 function RouteComponent() {
   const [page, setPage] = React.useState(1);
-  const eventiPerPagina = 6; 
+  const eventiPerPagina = 6;
 
   const { useGetEvents } = useUseQueries();
   const { data, isLoading } = useGetEvents({ page, size: eventiPerPagina });
@@ -42,8 +45,6 @@ function RouteComponent() {
       }}
     >
       
-
-      {/* 🔹 Contenitore centrato delle card */}
       <div
         style={{
           display: "flex",
@@ -57,12 +58,12 @@ function RouteComponent() {
           minHeight: "calc(100vh - 100px)",
         }}
       >
-        {eventi.map((evento: any) => (
+        {eventi.map((evento: IEvent) => (
           <ActionAreaCard key={evento._id} evento={evento} />
         ))}
       </div>
 
-      {/* 🔽 Paginazione  */}
+      
       <Stack
         spacing={2}
         direction="row"
@@ -81,20 +82,8 @@ function RouteComponent() {
   );
 }
 
-type Evento = {
-  _id: string;
-  title: string;
-  description: string;
-  date: string;
-  address?: string;
-  duration?: string;
-  city?: string;
-  short_description?:string;
-  category?:string
-  //image?: string;
-};
 
-export function ActionAreaCard({ evento }: { evento: Evento }) {
+export function ActionAreaCard({ evento }: { evento: IEvent }) {
   const dataFormattata = new Date(evento.date).toLocaleDateString("it-IT", {
     day: "2-digit",
     month: "long",
@@ -114,53 +103,64 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
         "&:hover": { transform: "scale(1.03)" },
       }}
     >
-     
-
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h5" textAlign={"center"}>
+        {/* Titolo */}
+        <Typography gutterBottom variant="h5" textAlign="center">
           {evento.title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}textAlign={"center"}>
+
+        {/* Data */}
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", mb: 1 }}
+          textAlign="center"
+        >
           📅 {dataFormattata}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }} textAlign={"center"}>
+
+        {/* Descrizione breve */}
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", mb: 2 }}
+          textAlign="center"
+        >
           {evento.short_description}
         </Typography>
-          
-          {/* 🔹 Blocco informativo unico */}
-  <Box
-    display="flex"
-    justifyContent="space-around"
-    alignItems="center"
-    textAlign="center"
-    mb={2}
-  >
-    {/* Categoria */}
-    <Box>
-      <LocalActivityIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
-      <Typography variant="body2" color="text.secondary">
-        {evento.category || "Categoria"}
-      </Typography>
-    </Box>
 
-    {/* Durata */}
-    <Box>
-      <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
-      <Typography variant="body2" color="text.secondary">
-        {evento.duration || "N/D"}
-      </Typography>
-    </Box>
+        {/* 🔹 Blocco informativo unico */}
+        <Box
+          display="flex"
+          justifyContent="space-around"
+          alignItems="center"
+          textAlign="center"
+          mb={2}
+        >
+          {/* Categoria */}
+          <Box>
+            <LocalActivityIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+            <Typography variant="body2" color="text.secondary">
+              {evento.category || "Categoria"}
+            </Typography>
+          </Box>
 
-    {/* Luogo */}
-    <Box>
-      <PlaceIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
-      <Typography variant="body2" color="text.secondary">
-        {evento.city || "Città"}
-      </Typography>
-    </Box>
-  </Box>
+          {/* Durata */}
+          <Box>
+            <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+            <Typography variant="body2" color="text.secondary">
+              {evento.duration || "N/D"}
+            </Typography>
+          </Box>
 
-        {/* 🔘 Bottone informazioni */}
+          {/* Luogo */}
+          <Box>
+            <PlaceIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+            <Typography variant="body2" color="text.secondary">
+              {evento.city || "Città"}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/*Bottone informazioni */}
         <Box display="flex" justifyContent="center" mt={2}>
           <Button
             variant="outlined"
@@ -182,4 +182,3 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
     </Card>
   );
 }
-
