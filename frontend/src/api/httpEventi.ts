@@ -1,5 +1,5 @@
 import { useAxios } from "../hooks/useAxios"
-import type { IBookEvent, IEvent, IEventsRes } from "../models/models"
+import type { EventsQueryParams, IBookEvent, IEvent, IEventsRes } from "../models/models"
 import axiosClient from "./axiosClient"
 
 
@@ -16,8 +16,19 @@ export function apiEvents() {
     await (axiosClientWithAuth.post(`/eventi/book/`,body))
   }
   
-  const getEvents = async (params?: { page?: number; size?: number }): Promise<IEventsRes> =>
-    (await axiosClient.get(`/eventi`, { params })).data;
+  const getEvents = async (params: EventsQueryParams): Promise<IEventsRes> =>{
+    const searchParams = new URLSearchParams();
+
+    if (params.page !== undefined) searchParams.append('page', params.page.toString());
+    if (params.size !== undefined) searchParams.append('size', params.size.toString());
+    if (params.title) searchParams.append('title', params.title);
+
+    const queryString = searchParams.toString() ? `?${searchParams.toString()}` : '';
+
+    console.log("fulUrl: ",queryString)
+
+    return (await axiosClient.get(`/eventi${queryString}`)).data
+  }
   
   return {
     getEventById,

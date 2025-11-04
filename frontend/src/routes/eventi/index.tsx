@@ -26,7 +26,7 @@ export const Route = createFileRoute("/eventi/")({
 function RouteComponent() {
   const eventsPerPage = 6
   const [params, setParams] = useState<EventsQueryParams>({page: 1, size: eventsPerPage});
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>();
 
   const { useGetEvents } = useUseQueries();
   const { data, isLoading } = useGetEvents(params);
@@ -43,7 +43,7 @@ function RouteComponent() {
       setParams((state) => ({
         ...state,
         page: 1,
-        title: title, 
+        title: title ? title : undefined, 
       }));
     }, 500); 
 
@@ -191,7 +191,7 @@ export function ActionAreaCard({ evento }: { evento: IEvent }) {
     <Box>
       <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
       <Typography variant="body2" color="text.secondary">
-        { (evento.duration?.hours + "h" + (evento.duration?.minutes ? "":"m")) || "N/D"}
+        { (evento.duration?.hours + "h" + (evento.duration?.minutes ? `${evento.duration.minutes}m`:"")) || "N/D"}
       </Typography>
     </Box>
 

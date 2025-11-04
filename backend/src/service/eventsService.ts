@@ -15,15 +15,6 @@ export class EventsService {
             size: query.size ? Number(query.size) : 6,
         }
 
-        const totElems = await eventsColletion.countDocuments()
-        const totPages = Math.ceil(totElems / paginationFilled.size)
-
-        const fullPagination: IPagination = {
-            ...paginationFilled,
-            totElems: totElems,
-            totPages: totPages
-        }
-
         let titleRegex = {}
         if(query.title){
             const nameEscaped = this.escapeRegex(query.title)
@@ -34,6 +25,15 @@ export class EventsService {
                     $options: 'i' 
                 }
             }
+        }
+
+        const totElems = await eventsColletion.countDocuments(titleRegex)
+        const totPages = Math.ceil(totElems / paginationFilled.size)
+
+        const fullPagination: IPagination = {
+            ...paginationFilled,
+            totElems: totElems,
+            totPages: totPages
         }
 
         const events: IEvent[] = await eventsColletion
