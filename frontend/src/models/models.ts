@@ -15,3 +15,21 @@ export interface IEvent {
     geoLocation: string
     category: string // maybe enum
 }
+
+
+
+
+export interface IEventsRes {
+    data: IEvent[]
+    pagination: IPagination
+}
+
+
+
+
+export interface IPagination {
+    page: number
+    size: number
+    totPages: number
+    totElems: number
+}

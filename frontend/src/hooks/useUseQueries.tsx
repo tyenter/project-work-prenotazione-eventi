@@ -1,20 +1,25 @@
-import { useQuery } from "@tanstack/react-query"
-import { apiEvents } from "../api/httpEventi"
+import { useQuery } from "@tanstack/react-query";
+import { apiEvents } from "../api/httpEventi";
 
-export function useUseQueries(){
-  const { getEventById } = apiEvents()
+type EventsQueryParams = { page?: number; size?: number };
 
-  const useGetEventById = (eventoId: string | undefined) =>
+export function useUseQueries() {
+  const { getEventById, getEvents } = apiEvents();
+
+  const useGetEventById = (eventoId?: string) =>
     useQuery({
-        queryKey: ["event", eventoId],
-        queryFn: () => getEventById(eventoId!),
-        enabled: !!eventoId, 
-        retry: 1, 
-        staleTime: 5 * 60 * 1000,
-    })
+      queryKey: ["event", eventoId],
+      queryFn: () => getEventById(eventoId!),
+      enabled: !!eventoId,
+    });
 
-  return {
-    useGetEventById,
+  const useGetEvents = (params?: EventsQueryParams) =>
+    useQuery({
+  queryKey: ["events", params?.page ?? 1, params?.size ?? 6],
+  queryFn: () => getEvents(params),
+  placeholderData: (prev) => prev, 
+})
+   
 
-  }
+  return { useGetEventById, useGetEvents };
 }

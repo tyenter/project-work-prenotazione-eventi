@@ -12,7 +12,7 @@ export class EventsService {
 
         const paginationFilled = {
             page: pagination.page ? Number(pagination.page) : 1,
-            size: pagination.size ? Number(pagination.size) : 3,
+            size: pagination.size ? Number(pagination.size) : 6,
         }
 
         const totElems = await eventsColletion.countDocuments()
