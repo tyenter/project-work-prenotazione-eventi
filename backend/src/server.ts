@@ -8,6 +8,7 @@ import https from "https";
 import helmet from 'helmet';
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import adminRouter from './router/authRouter';
 
 const app = express();
 
@@ -35,5 +36,6 @@ app.use(cors({
 
 app.use("/eventi", eventsRouter)
 app.use("/auth", authRouter)
+app.use("/admin", adminRouter)
 
 app.use(errorHandler)

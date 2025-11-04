@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useUseQueries } from "../../hooks/useUseQueries";
 import * as React from "react";
 import {
@@ -147,6 +147,9 @@ function RouteComponent() {
 
 
 export function ActionAreaCard({ evento }: { evento: IEvent }) {
+
+  const navigate = useNavigate()
+
   const dataFormattata = new Date(evento.date).toLocaleDateString("it-IT", {
     day: "2-digit",
     month: "long",
@@ -237,7 +240,7 @@ export function ActionAreaCard({ evento }: { evento: IEvent }) {
               padding: "0.75rem",
               fontSize: "1rem",
             }}
-            onClick={() => alert(`Ulteriori informazioni su: ${evento.title}`)}
+            onClick={() => navigate({to: `/eventi/${evento._id}`,})}
           >
             Ulteriori informazioni
           </Button>
