@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiEvents } from "../api/httpEventi";
+import type { EventsQueryParams } from "../models/models";
 
 export function useUseQueries(){
   const { getEventById, checkBooking,getEvents } = apiEvents()
-  type EventsQueryParams = { page?: number; size?: number };
 
 
   const useGetEventById = (eventId: string | undefined) =>
@@ -17,10 +17,10 @@ export function useUseQueries(){
 
   const useGetEvents = (params?: EventsQueryParams) =>
       useQuery({
-    queryKey: ["events", params?.page ?? 1, params?.size ?? 6],
-    queryFn: () => getEvents(params),
-    placeholderData: (prev) => prev, 
-  })
+        queryKey: ["events", params?.page ?? 1, params?.size ?? 6, params?.title ?? ""],
+        queryFn: () => getEvents(params),
+        placeholderData: (prev) => prev, 
+      })
 
   const useCheckBooking = (eventId: string | undefined) =>
     useQuery({

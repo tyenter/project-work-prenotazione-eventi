@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceIcon from "@mui/icons-material/Place";
+import { useState } from "react";
+import SearchBar from "../../components/Searchbar";
+import type { EventsQueryParams } from "../../models/models";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import type { IEvent } from "../../models/models";
 
@@ -21,22 +24,45 @@ export const Route = createFileRoute("/eventi/")({
 });
 
 function RouteComponent() {
-  const [page, setPage] = React.useState(1);
-  const eventiPerPagina = 6;
+  const eventsPerPage = 6
+  const [params, setParams] = useState<EventsQueryParams>({page: 1, size: eventsPerPage});
+  const [title, setTitle] = useState<string>('');
 
   const { useGetEvents } = useUseQueries();
-  const { data, isLoading } = useGetEvents({ page, size: eventiPerPagina });
+  const { data, isLoading } = useGetEvents(params);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
+  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setParams((state) => ({
+      ...state,
+      page: value
+    }));
   };
+
+  React.useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      setParams((state) => ({
+        ...state,
+        page: 1,
+        title: title, 
+      }));
+    }, 500); 
+
+    return () => {
+      clearTimeout(debounceTimeout); 
+    };
+  }, [title]); 
+
 
   if (isLoading) return <>Caricamento...</>;
 
   const eventi = data?.data || [];
   const pagination = data?.pagination;
 
-  return (
+  return (<>
+    <SearchBar
+      onSearch={(searchTerm) => setTitle(searchTerm)}
+    />
+
     <div
       style={{
         minHeight: "100vh",
@@ -44,7 +70,6 @@ function RouteComponent() {
         backgroundColor: "#f5f6fa",
       }}
     >
-      
       <div
         style={{
           display: "flex",
@@ -63,7 +88,6 @@ function RouteComponent() {
         ))}
       </div>
 
-      
       <Stack
         spacing={2}
         direction="row"
@@ -73,13 +97,13 @@ function RouteComponent() {
       >
         <Pagination
           count={pagination?.totPages || 1}
-          page={page}
+          page={params.page}
           onChange={handleChange}
           color="primary"
         />
       </Stack>
     </div>
-  );
+  </>);
 }
 
 
@@ -142,14 +166,15 @@ export function ActionAreaCard({ evento }: { evento: IEvent }) {
               {evento.category || "Categoria"}
             </Typography>
           </Box>
+    {/* Durata */}
+    <Box>
+      <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        { (evento.duration?.hours + "h" + (evento.duration?.minutes ? "":"m")) || "N/D"}
+      </Typography>
+    </Box>
 
-          {/* Durata */}
-          <Box>
-            <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
-            <Typography variant="body2" color="text.secondary">
-              {evento.duration || "N/D"}
-            </Typography>
-          </Box>
+          
 
           {/* Luogo */}
           <Box>

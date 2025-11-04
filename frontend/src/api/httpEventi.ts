@@ -15,7 +15,8 @@ export function apiEvents() {
   const bookEvent = async (body: IBookEvent): Promise<void> => {
     await (axiosClientWithAuth.post(`/eventi/book/`,body))
   }
-   const getEvents = async (params?: { page?: number; size?: number }): Promise<IEventsRes> =>
+  
+  const getEvents = async (params?: { page?: number; size?: number }): Promise<IEventsRes> =>
     (await axiosClient.get(`/eventi`, { params })).data;
   
   return {
