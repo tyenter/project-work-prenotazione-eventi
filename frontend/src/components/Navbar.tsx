@@ -17,7 +17,7 @@ const Navbar = () => {
           Login
         </Button>
         <Button color="inherit" onClick={()=>navigate({to: "/signup"})}>
-          Signup
+          Registrati
         </Button>
         {   accessToken ?
             <Button color="inherit" onClick={async () => {

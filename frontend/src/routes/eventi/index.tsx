@@ -9,6 +9,7 @@ import {
   Stack,
   Button,
   Box,
+  withTheme,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -17,6 +18,7 @@ import SearchBar from "../../components/Searchbar";
 import type { EventsQueryParams } from "../../models/models";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import type { IEvent } from "../../models/models";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 
 export const Route = createFileRoute("/eventi/")({
@@ -59,28 +61,44 @@ function RouteComponent() {
   const pagination = data?.pagination;
 
   return (<>
-    <Box
+   <Box
   sx={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "2rem 1rem 1rem 1rem",
+    background: "linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)",
+    color: "white",
+    py: 8,
     textAlign: "center",
+    borderRadius: "0 0 24px 24px",
+    mb: 5,
   }}
 >
+  <Box sx={{ fontSize: 60, mb: 2 }}>🎪</Box>
+
   <Typography
-    variant="h4"
+    variant="h3"
     sx={{
       fontWeight: "bold",
-      color: "#1e1e1e",
-      marginBottom: "1rem",
+      mb: 1,
     }}
   >
     Cerca il tuo evento
   </Typography>
 
-  <Box sx={{ width: "100%", maxWidth: "600px" }}>
+  <Typography
+    variant="h6"
+    sx={{
+      mb: 3,
+      maxWidth: 600,
+      mx: "auto",
+      fontWeight: 400,
+      opacity: 0.9,
+    }}
+  >
+    Trova concerti, spettacoli e attività vicino a te. Scopri tutti gli eventi e
+    scegli quello perfetto!
+  </Typography>
+
+  {/* 🔍 SearchBar centrata */}
+  <Box sx={{ width: "100%", maxWidth: 600, mx: "auto" , backgroundColor: "white" }}>
     <SearchBar onSearch={(searchTerm) => setTitle(searchTerm)} />
   </Box>
 </Box>
