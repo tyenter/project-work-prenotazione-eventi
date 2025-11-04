@@ -26,7 +26,6 @@ export const authenticateMe = (typeOfAuth: TypeOfAuth) => {
       if(typeOfAuth === "signup")
         payload = {...payload,firstName: info.firstName,lastName: info.lastName}
 
-      console.log(payload)
       const {data} = await axiosClient.post(`/auth/${typeOfAuth}`, payload);
       const response = responseSchema.parse(data);
       setAccessToken(response.accessToken);
