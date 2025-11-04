@@ -1,18 +1,18 @@
 import { ObjectId, WithId } from 'mongodb';
 import { COLLECTION_BOOKINGS, COLLECTION_EVENTI } from '../config';
 import { connectDB } from '../db';
-import { IBookings, IEvent, IEventsRes, IPagination, IPaginationQuery } from '../models/models';
+import { IBookings, IEvent, IEventsRes, IPagination, IEventsQuery } from '../models/models';
 import { BadRequest, InternalServerError, NotFound } from '../errors/errors';
 
 export class EventsService {
     
-    public async getEvents(pagination: IPaginationQuery): Promise<IEventsRes>{
+    public async getEvents(query: IEventsQuery): Promise<IEventsRes>{
         const db = await connectDB()
         const eventsColletion = db.collection<IEvent>(COLLECTION_EVENTI);
 
         const paginationFilled = {
-            page: pagination.page ? Number(pagination.page) : 1,
-            size: pagination.size ? Number(pagination.size) : 3,
+            page: query.page ? Number(query.page) : 1,
+            size: query.size ? Number(query.size) : 3,
         }
 
         const totElems = await eventsColletion.countDocuments()
@@ -24,8 +24,20 @@ export class EventsService {
             totPages: totPages
         }
 
+        let titleRegex = {}
+        if(query.title){
+            const nameEscaped = this.escapeRegex(query.title)
+            const pattern = `^(${nameEscaped})|( ${nameEscaped})`
+            titleRegex = {
+                title: { 
+                    $regex: RegExp(pattern),
+                    $options: 'i' 
+                }
+            }
+        }
+
         const events: IEvent[] = await eventsColletion
-                            .find()
+                            .find(titleRegex)
                             .sort({ date: -1 })
                             .skip((fullPagination.page - 1) * fullPagination.size)
                             .limit(fullPagination.size)
@@ -85,6 +97,10 @@ export class EventsService {
             return true
 
         return false
+    }
+
+    private escapeRegex(title: string):string {
+        return title.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
     }
 
 }

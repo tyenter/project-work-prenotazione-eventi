@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { EventsService } from '../service/eventsService';
-import { IEvent, IEventsRes, IPaginationQuery } from '../models/models';
-import { bookEventSchema, objectIdSchema, paginationSchema } from './joiSchemas';
-import { BadRequest, InternalServerError } from '../errors/errors';
+import { IEvent, IEventsRes, IEventsQuery } from '../models/models';
+import { bookEventSchema, objectIdSchema, eventsSchema } from './joiSchemas';
+import { BadRequest } from '../errors/errors';
 
 
 export class EventsController {
@@ -11,13 +11,13 @@ export class EventsController {
 
     public getAllEvents = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try{
-            const pagination: IPaginationQuery = req.query
+            const eventsQuery: IEventsQuery = req.query
 
-            const {error} = paginationSchema.validate(pagination)
+            const {error} = eventsSchema.validate(eventsQuery)
             if(error)
                 throw new BadRequest("invalid parameters")
             
-            const events: IEventsRes = await this.eventsService.getEvents(pagination)
+            const events: IEventsRes = await this.eventsService.getEvents(eventsQuery)
 
             res.status(200).json(events)
         }catch(err){

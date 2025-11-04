@@ -7,9 +7,10 @@ export interface IPagination {
     totElems: number
 }
 
-export interface IPaginationQuery {
+export interface IEventsQuery {
     page?: number
     size?: number
+    title?: string
 }
 
 export interface IEvent extends WithId<Document> {
