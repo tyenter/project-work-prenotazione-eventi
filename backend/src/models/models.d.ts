@@ -18,8 +18,9 @@ export interface IEvent extends WithId<Document> {
     title: string
     description: string
     people: number
-    geoLocation: string
-    category: string // maybe enum
+    address: string
+    category: string 
+    short_description: string
 }
 
 export interface IEventsRes {

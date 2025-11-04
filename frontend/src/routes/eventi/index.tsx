@@ -12,6 +12,8 @@ import PlaceIcon from "@mui/icons-material/Place";
 import { useState } from "react";
 import SearchBar from "../../components/Searchbar";
 import type { EventsQueryParams } from "../../models/models";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+
 
 export const Route = createFileRoute("/eventi/")({
   component: RouteComponent,
@@ -64,7 +66,6 @@ function RouteComponent() {
         backgroundColor: "#f5f6fa",
       }}
     >
-
       <div
         style={{
           display: "flex",
@@ -112,6 +113,9 @@ type Evento = {
     minutes: number
   };
   city?: string;
+  short_description?:string;
+  category?:string
+  //image?: string;
 };
 
 export function ActionAreaCard({ evento }: { evento: Evento }) {
@@ -137,34 +141,48 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
      
 
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h5">
+        <Typography gutterBottom variant="h5" textAlign={"center"}>
           {evento.title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}>
+        <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}textAlign={"center"}>
           📅 {dataFormattata}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
-          {evento.description}
+        <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }} textAlign={"center"}>
+          {evento.short_description}
         </Typography>
+          
+          {/* 🔹 Blocco informativo unico */}
+  <Box
+    display="flex"
+    justifyContent="space-around"
+    alignItems="center"
+    textAlign="center"
+    mb={2}
+  >
+    {/* Categoria */}
+    <Box>
+      <LocalActivityIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        {evento.category || "Categoria"}
+      </Typography>
+    </Box>
 
-        <Box display="flex" justifyContent="space-around" alignItems="center" my={2}>
-          <Box textAlign="center">
-            <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 30 }} />
-            <Typography variant="body2" color="text.secondary">
-              { (evento.duration?.hours + "h" + (evento.duration?.minutes ? "":"m")) || "N/D"}
-            </Typography>
-          </Box>
+    {/* Durata */}
+    <Box>
+      <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        { (evento.duration?.hours + "h" + (evento.duration?.minutes ? "":"m")) || "N/D"}
+      </Typography>
+    </Box>
 
-          <Box textAlign="center">
-            <PlaceIcon sx={{ color: "#d4b000", fontSize: 30 }} />
-            <Typography variant="body2" color="text.secondary">
-              {evento.address || "Indirizzo non disponibile"}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {evento.city}
-            </Typography>
-          </Box>
-        </Box>
+    {/* Luogo */}
+    <Box>
+      <PlaceIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        {evento.city || "Città"}
+      </Typography>
+    </Box>
+  </Box>
 
         <Box display="flex" justifyContent="center" mt={2}>
           <Button
