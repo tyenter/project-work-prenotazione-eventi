@@ -10,6 +10,8 @@ import Stack from "@mui/material/Stack";
 import { Button, Box } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceIcon from "@mui/icons-material/Place";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+
 
 export const Route = createFileRoute("/eventi/")({
   component: RouteComponent,
@@ -39,7 +41,7 @@ function RouteComponent() {
         backgroundColor: "#f5f6fa",
       }}
     >
-      <Navbar />
+      
 
       {/* 🔹 Contenitore centrato delle card */}
       <div
@@ -87,6 +89,8 @@ type Evento = {
   address?: string;
   duration?: string;
   city?: string;
+  short_description?:string;
+  category?:string
   //image?: string;
 };
 
@@ -113,34 +117,48 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
      
 
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h5">
+        <Typography gutterBottom variant="h5" textAlign={"center"}>
           {evento.title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}>
+        <Typography variant="body2" sx={{ color: "text.secondary", mb: 1 }}textAlign={"center"}>
           📅 {dataFormattata}
         </Typography>
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
-          {evento.description}
+        <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }} textAlign={"center"}>
+          {evento.short_description}
         </Typography>
+          
+          {/* 🔹 Blocco informativo unico */}
+  <Box
+    display="flex"
+    justifyContent="space-around"
+    alignItems="center"
+    textAlign="center"
+    mb={2}
+  >
+    {/* Categoria */}
+    <Box>
+      <LocalActivityIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        {evento.category || "Categoria"}
+      </Typography>
+    </Box>
 
-        <Box display="flex" justifyContent="space-around" alignItems="center" my={2}>
-          <Box textAlign="center">
-            <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 30 }} />
-            <Typography variant="body2" color="text.secondary">
-              {evento.duration || "N/D"}
-            </Typography>
-          </Box>
+    {/* Durata */}
+    <Box>
+      <AccessTimeIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        {evento.duration || "N/D"}
+      </Typography>
+    </Box>
 
-          <Box textAlign="center">
-            <PlaceIcon sx={{ color: "#d4b000", fontSize: 30 }} />
-            <Typography variant="body2" color="text.secondary">
-              {evento.address || "Indirizzo non disponibile"}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {evento.city}
-            </Typography>
-          </Box>
-        </Box>
+    {/* Luogo */}
+    <Box>
+      <PlaceIcon sx={{ color: "#d4b000", fontSize: 26, mb: 0.5 }} />
+      <Typography variant="body2" color="text.secondary">
+        {evento.city || "Città"}
+      </Typography>
+    </Box>
+  </Box>
 
         {/* 🔘 Bottone informazioni */}
         <Box display="flex" justifyContent="center" mt={2}>
@@ -165,31 +183,3 @@ export function ActionAreaCard({ evento }: { evento: Evento }) {
   );
 }
 
-const Navbar = () => (
-  <nav
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "1rem 2rem",
-      backgroundColor: "#2f3640",
-      color: "white",
-    }}
-  >
-    <div>
-      <h1 style={{ margin: 0 }}>EventiApp</h1>
-    </div>
-    <button
-      style={{
-        backgroundColor: "#00a8ff",
-        color: "white",
-        border: "none",
-        borderRadius: "5px",
-        padding: "0.5rem 1rem",
-        cursor: "pointer",
-      }}
-    >
-      Login
-    </button>
-  </nav>
-);
