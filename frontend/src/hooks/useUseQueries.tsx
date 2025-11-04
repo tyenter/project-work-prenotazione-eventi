@@ -15,9 +15,9 @@ export function useUseQueries(){
         staleTime: 5 * 60 * 1000,
     })
 
-  const useGetEvents = (params?: EventsQueryParams) =>
+  const useGetEvents = (params: EventsQueryParams) =>
       useQuery({
-        queryKey: ["events", params?.page ?? 1, params?.size ?? 6, params?.title ?? ""],
+        queryKey: ["events", params?.page, params?.size, params?.title],
         queryFn: () => getEvents(params),
         placeholderData: (prev) => prev, 
       })
