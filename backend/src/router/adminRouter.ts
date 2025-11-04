@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { AdminController } from '../controller/adminController';
-import { authenticateToken } from '../middleware/tokenVerifier';
+import { NextFunction, Request, Response } from 'express';
 
 const adminRouter: Router = Router();
 const adminController = new AdminController();
 
-adminRouter.post('/',authenticateToken, adminController.placeholder); //tmp
+adminRouter.post('/', async (_: Request, res: Response): Promise<void>  => {
+    res.status(200).json("OK")
+});
 
 export default adminRouter;

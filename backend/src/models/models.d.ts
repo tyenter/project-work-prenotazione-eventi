@@ -39,6 +39,7 @@ export interface ICredentials {
         token: string
         expiresAt: Date
     }
+    role?: string
 }
 
 export interface IUserInfoPOST {
