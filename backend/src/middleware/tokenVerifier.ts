@@ -1,6 +1,7 @@
 import { NextFunction, Router, Request, Response } from 'express';
 import { JWT_ACCESS_SECRET } from '../config';
 import jwt, {VerifyErrors} from "jsonwebtoken";
+import { TokenInfo } from '../types/express';
 
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +15,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
         if (err) 
             return res.sendStatus(401); 
             
-        req.user = user as {sub: string}; 
+        req.user = user as TokenInfo; 
 
         next();
     });

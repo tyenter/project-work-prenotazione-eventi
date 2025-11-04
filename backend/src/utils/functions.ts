@@ -12,12 +12,18 @@ export const verifyPassword = async (password: string, hash: string): Promise<bo
   return await bcrypt.compare(password, hash);
 };
 
-export const generateTokens = (userId: ObjectId) => {
-  const payload = { sub: userId.toString() };
+export const generateTokens = (userId: ObjectId, admin?: boolean) => {
+
+  let payload: {sub:string} | {sub:string,role:string} = { 
+    sub: userId.toString(),
+  }
+  if(admin)
+    payload = {...payload, role: "admin"}
 
   const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET!, {
     algorithm: "HS256",
-    expiresIn: "5m"
+    expiresIn: "1m" //tmp
+    // expiresIn: "5m" 
   });
 
   const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET!, {
