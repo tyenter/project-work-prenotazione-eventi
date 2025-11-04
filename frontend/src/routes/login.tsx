@@ -2,7 +2,7 @@ import { Button, TextField, Alert } from '@mui/material';
 import { formOptions, useForm } from '@tanstack/react-form';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import z from 'zod';
-import { useLogin } from '../hooks/useLogin';
+import { authenticateMe } from '../hooks/authenticateMe';
 import type { TLoginError } from '../models/models';
 import { useState } from 'react';
 
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/login')({
 function Login({from}:{from?: string}){
     const navigate = useNavigate();
     const [alert, setAlert] = useState<string>()
-    const login = useLogin()
+    const login = authenticateMe("login")
 
     interface User {
         email: string
@@ -35,7 +35,7 @@ function Login({from}:{from?: string}){
         ...formOpts,
         onSubmit: async ({ value }) => {
             const error: TLoginError | undefined = 
-                await login(value.email,value.password)
+                await login({email: value.email,password: value.password})
 
             if(error){
                 if(error === "INVALID_CREDENTIALS")
@@ -87,7 +87,7 @@ function Login({from}:{from?: string}){
                 name="password"
                 children={(field) => (<>
                     <TextField 
-                        label="password"
+                        label="Password"
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
                         error={!field.state.meta.isValid}

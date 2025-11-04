@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { credsSchema, refreshTokenSchema, userInfoSchema } from './joiSchemas';
 import { BadRequest, Unauthorized } from '../errors/errors';
 import { AuthService } from '../service/authService';
-import { IUserInfoPOST } from '../models/models';
-
+import jwt from "jsonwebtoken"; 
+import { JWT_REFRESH_SECRET } from '../config';
 
 export class AuthController {
 
@@ -20,7 +20,7 @@ export class AuthController {
                 email: req.body.email,
                 password: req.body.password
             }
-            const {error} = credsSchema.validate(credentials)
+            const {error} = credsSchema.validate(credentials,{ stripUnknown: true })
             if(error)
                 throw new Unauthorized("invalid credentials")
 
@@ -32,7 +32,7 @@ export class AuthController {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
-                path: "/auth/refresh",
+                path: "/auth",
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
             });
 
@@ -54,6 +54,12 @@ export class AuthController {
             if(error)
                 throw new Unauthorized("invalid refresh token")
 
+            try {
+                jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+            } catch (err) {
+                throw new Unauthorized("invalid refresh token");
+            }
+
             const {accessToken, newRefreshToken} = 
                 await this.authService.handleRefresh(refreshToken)
 
@@ -62,7 +68,7 @@ export class AuthController {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
-                path: "/auth/refresh",
+                path: "/auth",
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
             });
 
@@ -91,7 +97,7 @@ export class AuthController {
                 httpOnly: true,
                 secure: true,
                 sameSite: "strict",
-                path: "/auth/refresh",
+                path: "/auth",
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
             });
 
@@ -99,6 +105,29 @@ export class AuthController {
             res.status(200).json({ accessToken });
         } catch(err: any){
             console.error("Signup Error: ",err)
+            next(err)
+        }
+    }
+
+    public manageLogout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            
+            const refreshToken = req.cookies.refreshToken;
+            if (!refreshToken) 
+               res.sendStatus(200);
+            
+            await this.authService.handleLogout(refreshToken)
+
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                path: '/auth', 
+            });
+
+            res.sendStatus(200);
+        } catch(err: any){
+            console.error("Logout Error: ",err)
             next(err)
         }
     }

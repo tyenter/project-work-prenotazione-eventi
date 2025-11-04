@@ -4,22 +4,35 @@ import { useAxios } from './useAxios';
 import { useAuth } from './useAuth';
 import z from 'zod';
 
-export const useLogin = () => {
+type TypeOfAuth = "login" | "signup"
+
+type TPayload = {
+  email: string, 
+  password: string, 
+  firstName?: string, 
+  lastName?: string
+}
+
+export const authenticateMe = (typeOfAuth: TypeOfAuth) => {
   const { setAccessToken } = useAuth();
   const axiosClient = useAxios();
-  const loginResponseSchema = z.object({
+  const responseSchema = z.object({
     accessToken: z.string(),
   });
 
-  return async (email: string, password: string): Promise<undefined | TLoginError> => {
+  return async (info: TPayload): Promise<undefined | TLoginError> => {
     try {
-      const {data} = await axiosClient.post('/auth/login', { email, password });
-      const result = loginResponseSchema.parse(data);
-      setAccessToken(result.accessToken);
+      let payload: TPayload  = info
+      if(typeOfAuth === "signup")
+        payload = {...payload,firstName: info.firstName,lastName: info.lastName}
+
+      const {data} = await axiosClient.post(`/auth/${typeOfAuth}`, payload);
+      const response = responseSchema.parse(data);
+      setAccessToken(response.accessToken);
     } catch (err) {
       if (axios.isAxiosError(err)){
         if (err.response) {
-          if(err.response.status === 401) return "INVALID_CREDENTIALS"
+          if(err.response.status === 401 || err.response.status === 400) return "INVALID_CREDENTIALS"
           else if (err.response.status === 400) return "BAD_REQUEST"
           else return "SERVER_ERROR"
         } 
@@ -35,9 +48,4 @@ export const useLogin = () => {
 //   sessionStorage.removeItem('accessToken');
 // }
 
-// export async function refreshAccessToken() {
-//   const response = await axiosClient.post('/auth/refresh');
-//   const result = loginResponseSchema.parse(response.data);
-//   sessionStorage.setItem('accessToken', result.accessToken);
-//   return result.accessToken;
-// }
+

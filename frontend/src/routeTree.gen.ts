@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventiIndexRouteImport } from './routes/eventi/index'
 import { Route as EventiEventoIdRouteImport } from './routes/eventi/$eventoId'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -38,12 +44,14 @@ const EventiEventoIdRoute = EventiEventoIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/eventi/$eventoId': typeof EventiEventoIdRoute
   '/eventi': typeof EventiIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/eventi/$eventoId': typeof EventiEventoIdRoute
   '/eventi': typeof EventiIndexRoute
 }
@@ -51,26 +59,35 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/eventi/$eventoId': typeof EventiEventoIdRoute
   '/eventi/': typeof EventiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/eventi/$eventoId' | '/eventi'
+  fullPaths: '/' | '/login' | '/signup' | '/eventi/$eventoId' | '/eventi'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/eventi/$eventoId' | '/eventi'
-  id: '__root__' | '/' | '/login' | '/eventi/$eventoId' | '/eventi/'
+  to: '/' | '/login' | '/signup' | '/eventi/$eventoId' | '/eventi'
+  id: '__root__' | '/' | '/login' | '/signup' | '/eventi/$eventoId' | '/eventi/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
   EventiEventoIdRoute: typeof EventiEventoIdRoute
   EventiIndexRoute: typeof EventiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
   EventiEventoIdRoute: EventiEventoIdRoute,
   EventiIndexRoute: EventiIndexRoute,
 }

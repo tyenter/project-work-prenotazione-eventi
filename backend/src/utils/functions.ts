@@ -17,14 +17,13 @@ export const generateTokens = (userId: ObjectId) => {
 
   const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET!, {
     algorithm: "HS256",
-    expiresIn: "15m",
+    expiresIn: "5m"
   });
 
   const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET!, {
-      algorithm: "HS256",
-      expiresIn: "7d",
-    }
-  );
+    algorithm: "HS256",
+    expiresIn: "7d",
+  });
 
   return { accessToken, refreshToken };
 };

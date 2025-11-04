@@ -16,16 +16,10 @@ export interface IEvent {
     category: string // maybe enum
 }
 
-
-
-
 export interface IEventsRes {
     data: IEvent[]
     pagination: IPagination
 }
-
-
-
 
 export interface IPagination {
     page: number
@@ -33,3 +27,7 @@ export interface IPagination {
     totPages: number
     totElems: number
 }
+export interface IBookEvent {
+    eventId: string,
+    people: number
+  }

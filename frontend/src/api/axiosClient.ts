@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const axiosClientNoToken = axios.create({
+const axiosClient = axios.create({
     baseURL: 'https://localhost:8443',
     withCredentials: true,
 });
 
-export default axiosClientNoToken
+export default axiosClient

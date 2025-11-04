@@ -1,8 +1,9 @@
 import Joi from 'joi';
 
-export const paginationSchema = Joi.object({
+export const eventsSchema = Joi.object({
   page: Joi.number().integer().min(1).max(1000).optional(),
-  size: Joi.number().integer().min(1).max(100).optional()
+  size: Joi.number().integer().min(1).max(100).optional(),
+  title: Joi.string().max(60).regex(/^[a-zA-Z0-9àòèùì ']*$/).optional()
 });
 
 export const objectIdSchema = Joi.string().hex().length(24).required()
@@ -38,3 +39,8 @@ export const refreshTokenSchema = Joi
   .string()
   .regex(/^[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+$/) 
   .required()
+
+export const bookEventSchema = Joi.object({
+  eventId: objectIdSchema,
+  people: Joi.number().integer().min(1).max(3).required()
+})

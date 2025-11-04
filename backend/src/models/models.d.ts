@@ -7,9 +7,10 @@ export interface IPagination {
     totElems: number
 }
 
-export interface IPaginationQuery {
+export interface IEventsQuery {
     page?: number
     size?: number
+    title?: string
 }
 
 export interface IEvent extends WithId<Document> {
@@ -31,7 +32,10 @@ export interface ICredentials {
     password: string
     firstName: string
     lastName: string
-    refreshToken?: string
+    refreshToken?: {
+        token: string
+        expiresAt: Date
+    }
 }
 
 export interface IUserInfoPOST {
@@ -40,4 +44,12 @@ export interface IUserInfoPOST {
     lastName: string
     email: string
     password: string
+}
+
+export interface IBookings{
+    userId: string,
+    eventsBooked: {
+        eventId: string,
+        people: number
+    }[]
 }
