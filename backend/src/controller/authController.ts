@@ -3,7 +3,7 @@ import { credsSchema, refreshTokenSchema, userInfoSchema } from './joiSchemas';
 import { BadRequest, Unauthorized } from '../errors/errors';
 import { AuthService } from '../service/authService';
 import jwt from "jsonwebtoken"; 
-import { JWT_REFRESH_SECRET } from '../config';
+import { ADMIN_EMAIL, JWT_REFRESH_SECRET } from '../config';
 
 export class AuthController {
 
@@ -87,6 +87,10 @@ export class AuthController {
             const {error, value: validUserInfo} = 
                 userInfoSchema.validate(userInfo, { stripUnknown: true })
             if(error)
+                throw new BadRequest("invalid user info") 
+
+            // nel caso la chiave unique fallisse per qualche motivo
+            if(validUserInfo.email === ADMIN_EMAIL)
                 throw new BadRequest("invalid user info") 
             
             const {accessToken, refreshToken} = 

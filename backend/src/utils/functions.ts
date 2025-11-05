@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config";
+import { ADMIN_EMAIL, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 
@@ -12,12 +12,12 @@ export const verifyPassword = async (password: string, hash: string): Promise<bo
   return await bcrypt.compare(password, hash);
 };
 
-export const generateTokens = (userId: ObjectId, admin?: boolean) => {
+export const generateTokens = (userId: ObjectId, userEmail?: string, userRole?: string) => {
 
   let payload: {sub:string} | {sub:string,role:string} = { 
     sub: userId.toString(),
   }
-  if(admin)
+  if(userRole === "admin" && userEmail === ADMIN_EMAIL)
     payload = {...payload, role: "admin"}
 
   const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET!, {

@@ -10,3 +10,4 @@ export const COLLECTION_CREDS = process.env.COLLECTION_CREDS || '';
 export const COLLECTION_BOOKINGS = process.env.COLLECTION_BOOKINGS || '';
 export const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || '';
 export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || '';
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';

@@ -8,8 +8,8 @@ import { JWT_REFRESH_SECRET } from '../config';
 export class AdminController {
 
 
-    public placeholder = async (req: Request, res: Response, next: NextFunction): Promise<void>  => {
-
+    public adminCheck = async (req: Request, res: Response, next: NextFunction): Promise<void>  => {
+        res.status(200).json("OK")
     }
     /*
 

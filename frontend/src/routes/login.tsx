@@ -1,17 +1,25 @@
 import { Button, TextField, Alert } from '@mui/material';
 import { formOptions, useForm } from '@tanstack/react-form';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import z from 'zod';
 import { authenticateMe } from '../hooks/authenticateMe';
 import type { TLoginError } from '../models/models';
 import { useState } from 'react';
 
 export const Route = createFileRoute('/login')({
+  validateSearch: (search) => ({
+    redirect: (search.redirect as string) || "/eventi",
+  }),
+  beforeLoad: ({ context }) => {
+    if (context.accessToken)
+      throw redirect({to: '/eventi'})
+  },
   component: Login,
 });
 
-function Login({from}:{from?: string}){
+function Login(){
     const navigate = useNavigate();
+    const { redirect } = Route.useSearch()
     const [alert, setAlert] = useState<string>()
     const login = authenticateMe("login")
 
@@ -48,7 +56,9 @@ function Login({from}:{from?: string}){
                 return
             }
             
-            navigate({ to: `/eventi` })
+            setTimeout(()=>{
+                navigate({ to: redirect })
+            },300) 
         },
     })
 

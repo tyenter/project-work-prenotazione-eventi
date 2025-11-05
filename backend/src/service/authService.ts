@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb';
-import { COLLECTION_CREDS } from '../config';
+import { ADMIN_EMAIL, COLLECTION_CREDS } from '../config';
 import { connectDB } from '../db';
 import { InternalServerError, Unauthorized } from '../errors/errors';
 import { ICredentials, IUserInfoPOST } from '../models/models';
@@ -28,7 +28,8 @@ export class AuthService {
             throw new Unauthorized("invalid credentials")
 
         // login effettuato -> immagazzino refresh token nel DB
-        const {accessToken, refreshToken} = generateTokens(user._id)
+        const { accessToken, refreshToken } = 
+            generateTokens(user._id,user.email,user.role);
 
         const hashedRefreshToken = this.hashToken(refreshToken)
         
@@ -97,7 +98,8 @@ export class AuthService {
             throw new Unauthorized("invalid refresh token")
 
         // token valido -> creo nuovi token e immagazzino nuovo refresh token nel DB
-        const { accessToken, refreshToken: newRefreshToken } = generateTokens(user._id);
+        const { accessToken, refreshToken: newRefreshToken } = 
+            generateTokens(user._id,user.email,user.role);
 
         const newHashedRefreshToken = this.hashToken(newRefreshToken)
 

@@ -8,7 +8,9 @@ import https from "https";
 import helmet from 'helmet';
 import cookieParser from "cookie-parser";
 import cors from "cors"
-import adminRouter from './router/authRouter';
+import adminRouter from './router/adminRouter';
+import { authenticateToken } from './middleware/tokenVerifier';
+import { authenticateAdmin } from './middleware/adminVerifier';
 
 const app = express();
 
@@ -27,15 +29,13 @@ https.createServer(options, app).listen(PORT, () => {
   console.log(`HTTPS server running on https://localhost:${PORT}`);
 });
 
-
 app.use(cors({
   origin: "https://localhost:5173", 
   credentials: true                
 }));
 
-
 app.use("/eventi", eventsRouter)
 app.use("/auth", authRouter)
-app.use("/admin", adminRouter)
+app.use("/admin", authenticateToken, authenticateAdmin, adminRouter)
 
 app.use(errorHandler)

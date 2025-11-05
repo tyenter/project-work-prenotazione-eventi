@@ -43,9 +43,4 @@ export const authenticateMe = (typeOfAuth: TypeOfAuth) => {
   };
 };
 
-// export async function logout() {
-//   await axiosClient.post('/auth/logout');
-//   sessionStorage.removeItem('accessToken');
-// }
-
 

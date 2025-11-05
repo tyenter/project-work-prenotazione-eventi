@@ -1,16 +1,21 @@
 import { useAuth } from './useAuth';
 import axiosClient from '../api/axiosClient';
 import type { AxiosInstance } from 'axios';
-
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useAxios = (): AxiosInstance => {
   const { accessToken, setAccessToken } = useAuth();
+  const tokenRef = useRef(accessToken);
+
+  useEffect(() => {
+    tokenRef.current = accessToken;
+  }, [accessToken]);
 
   useEffect(() => {
     const reqInterceptor = axiosClient.interceptors.request.use((config) => {
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      const token = tokenRef.current;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });
@@ -30,12 +35,13 @@ export const useAxios = (): AxiosInstance => {
           try {
             const { data } = await axiosClient.post('/auth/refresh', {}, { withCredentials: true });
 
-            if (!data?.accessToken) {
+            if (!data?.accessToken || typeof data.accessToken !== "string") {
               setAccessToken(null);
               return Promise.reject(new Error('No access token returned from refresh'));
             }
-            
+
             setAccessToken(data.accessToken);
+            tokenRef.current = data.accessToken;
 
             originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
             return axiosClient(originalRequest);
@@ -53,7 +59,7 @@ export const useAxios = (): AxiosInstance => {
       axiosClient.interceptors.request.eject(reqInterceptor);
       axiosClient.interceptors.response.eject(resInterceptor);
     };
-  }, [accessToken, setAccessToken]);
+  }, [setAccessToken]);
 
   return axiosClient;
 };
