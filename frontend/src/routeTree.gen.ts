@@ -93,28 +93,28 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/dashboard'
     | '/eventi/$eventoId'
     | '/eventi/gestione'
-    | '/dashboard'
     | '/eventi'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
-    | '/eventi/gestione'
     | '/dashboard'
     | '/eventi/$eventoId'
+    | '/eventi/gestione'
     | '/eventi'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/login'
     | '/signup'
-    | '/eventi/gestione'
-    | '/_authenticated'
     | '/_authenticated/dashboard'
     | '/eventi/$eventoId'
+    | '/eventi/gestione'
     | '/eventi/'
   fileRoutesById: FileRoutesById
 }
