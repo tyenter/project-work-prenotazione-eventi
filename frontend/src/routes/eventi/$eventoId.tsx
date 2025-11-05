@@ -14,6 +14,7 @@ import {
   Divider,
   Stack,
   CircularProgress,
+  CardMedia,
 } from '@mui/material'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import PlaceIcon from '@mui/icons-material/Place'
@@ -46,7 +47,7 @@ function RouteComponent() {
     defaultValues: defaultPeople,
     validators: {
       onSubmit: z.object({
-        people: z.number().int().min(1).max(3),
+        people: z.number().int().min(1).max(10),
       }),
     },
   })
@@ -83,7 +84,7 @@ function RouteComponent() {
 
   return (
     <>
-      {/* 🌈 Banner in alto */}
+      {/*Banner in alto */}
       <Box
         sx={{
           background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
@@ -111,7 +112,7 @@ function RouteComponent() {
         </Typography>
       </Box>
 
-      {/* 🪩 Card con dettagli evento */}
+      {/* Card con dettagli evento */}
       <Box
         sx={{
           display: 'flex',
@@ -122,6 +123,7 @@ function RouteComponent() {
           pb: 8,
         }}
       >
+        
         <Card sx={{ maxWidth: 800, width: '100%', boxShadow: 5, borderRadius: 3 }}>
           <CardHeader
             avatar={<EventAvailableIcon color="primary" sx={{ fontSize: 40 }} />}
@@ -129,6 +131,21 @@ function RouteComponent() {
             titleTypographyProps={{ variant: 'h5', fontWeight: 'bold' }}
           />
           <Divider />
+          <CardMedia
+        component="img"
+        width={"100"}
+        height="450"
+        image={event.image}
+        alt={event.title}
+        sx={{
+          objectFit: 'cover',
+          borderRadius: 3,     
+          mx: 2,                
+          mt: 2,            
+          mb: 1,                
+          boxShadow: 2,         
+        }}
+      />
 
           <CardContent>
             <Stack spacing={2}>
@@ -172,7 +189,7 @@ function RouteComponent() {
 
               <Divider sx={{ my: 2 }} />
 
-              {/* 🔸 Descrizione evento */}
+              {/* Descrizione evento */}
               <Typography
                 variant="body1"
                 sx={{ whiteSpace: 'pre-line', lineHeight: 1.6 }}
@@ -182,7 +199,7 @@ function RouteComponent() {
 
               <Divider sx={{ my: 2 }} />
 
-              {/* 🔸 Prenotazione */}
+              {/* Prenotazione */}
               <Typography
                 variant="h6"
                 fontWeight="bold"

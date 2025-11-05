@@ -20,6 +20,7 @@ export interface IEvent extends WithId<Document> {
     people: number
     duration : {hours:number,
                 minutes:number}
+    city:string
     address: string
     category: string 
     short_description: string

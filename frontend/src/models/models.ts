@@ -16,7 +16,9 @@ export interface IEvent {
     people: number,
     city: string;
     short_description:string;
-    category:string
+    category:string;
+    people:Int32Array;
+    image:string;
 }
 
 export type EventsQueryParams = { 
