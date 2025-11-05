@@ -14,12 +14,10 @@ import { authenticateAdmin } from './middleware/adminVerifier';
 
 const app = express();
 
-app.use(helmet()); // per sicurezza HTTP headers
+app.use(helmet()); 
 app.use(express.json()); 
 app.use(cookieParser());
 
-// uso self-signed certificate perchè non siamo in production
-// altrimenti si potrebbe usare nginx + let's encrypt 
 const options = {
   key: fs.readFileSync("certs/server.key"),
   cert: fs.readFileSync("certs/server.crt"),
