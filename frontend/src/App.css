@@ -42,10 +42,6 @@ h1, h2, h3, h4, h5, h6 {
   transition: background-color 0.2s ease;
 }
 
-.navbar-right .login-btn:hover {
-  background-color: #e5e7eb;
-}
-
 /* 
    EVENTI GRID & CARD
 */
@@ -188,3 +184,4 @@ button {
   font-size: 0.85rem;         
   text-transform: capitalize;
 }
+

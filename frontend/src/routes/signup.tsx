@@ -106,6 +106,35 @@ function Signup(){
                     {alert}
                 </Alert>
             }
+            <form.Field
+              name="firstName"
+              children={(field) => (<>
+                <TextField 
+                  label="Nome"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  error={!field.state.meta.isValid}
+                />
+                <span style={{color: "red"}}>
+                  {field.state.meta.errors[0]?.message} 
+                </span>
+              </>)}
+            />
+            
+            <form.Field
+              name="lastName"
+              children={(field) => (<>
+                <TextField 
+                  label="Cognome"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  error={!field.state.meta.isValid}
+                />
+                <span style={{color: "red"}}>
+                  {field.state.meta.errors[0]?.message}
+                </span>
+              </>)}
+            />
 
             <form.Field
               name="email"
@@ -138,35 +167,9 @@ function Signup(){
               </>)}
             />
 
-            <form.Field
-              name="firstName"
-              children={(field) => (<>
-                <TextField 
-                  label="Nome"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  error={!field.state.meta.isValid}
-                />
-                <span style={{color: "red"}}>
-                  {field.state.meta.errors[0]?.message} 
-                </span>
-              </>)}
-            />
+            
 
-            <form.Field
-              name="lastName"
-              children={(field) => (<>
-                <TextField 
-                  label="Cognome"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  error={!field.state.meta.isValid}
-                />
-                <span style={{color: "red"}}>
-                  {field.state.meta.errors[0]?.message}
-                </span>
-              </>)}
-            />
+            
 
 
             <form.Subscribe

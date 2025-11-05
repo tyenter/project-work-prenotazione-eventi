@@ -10,6 +10,7 @@ import {
   Button,
   Box,
   withTheme,
+  CardMedia,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -19,6 +20,9 @@ import type { EventsQueryParams } from "../../models/models";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import type { IEvent } from "../../models/models";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import CelebrationIcon from "@mui/icons-material/Celebration"
+
+
 
 
 export const Route = createFileRoute("/eventi/")({
@@ -71,7 +75,23 @@ function RouteComponent() {
     mb: 5,
   }}
 >
-  <Box sx={{ fontSize: 60, mb: 2 }}>🎪</Box>
+  <Box
+  sx={{
+    display: "inline-flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+    color: "#1976d2",
+    fontSize: 100,
+    width: 130,
+    height: 130,
+    borderRadius: "50%",
+    mb: 3,
+    boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+  }}
+>
+  <CelebrationIcon sx={{ fontSize: 80 }} />
+</Box>
 
   <Typography
     variant="h3"
@@ -97,8 +117,16 @@ function RouteComponent() {
     scegli quello perfetto!
   </Typography>
 
-  {/* 🔍 SearchBar centrata */}
-  <Box sx={{ width: "100%", maxWidth: 600, mx: "auto" , backgroundColor: "white" }}>
+  {/*SearchBar*/}
+  <Box sx={{
+    width: "100%",
+    maxWidth: 700,
+    mx: "auto",
+    backgroundColor: "white",
+    borderRadius: "10px",       
+    boxShadow: "0px 3px 10px rgba(0,0,0,0.1)",
+    p: 1,
+  }}>
     <SearchBar onSearch={(searchTerm) => setTitle(searchTerm)} />
   </Box>
 </Box>
@@ -149,6 +177,9 @@ function RouteComponent() {
 export function ActionAreaCard({ evento }: { evento: IEvent }) {
 
   const navigate = useNavigate()
+  const dataEvento = new Date(evento.date);
+  const oggi = new Date();
+  const eventoPassato = dataEvento < oggi;
 
   const dataFormattata = new Date(evento.date).toLocaleDateString("it-IT", {
     day: "2-digit",
@@ -169,6 +200,17 @@ export function ActionAreaCard({ evento }: { evento: IEvent }) {
         "&:hover": { transform: "scale(1.03)" },
       }}
     >
+      <CardMedia
+        component="img"
+        height="180"
+        image={evento.image}
+        alt={evento.title}
+        sx={{
+          objectFit: "cover",
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+        }}
+      />
       <CardContent sx={{ flexGrow: 1 }}>
         {/* Titolo */}
         <Typography gutterBottom variant="h5" textAlign="center">
@@ -228,23 +270,38 @@ export function ActionAreaCard({ evento }: { evento: IEvent }) {
         </Box>
 
         {/*Bottone informazioni */}
-        <Box display="flex" justifyContent="center" mt={2}>
-          <Button
-            variant="outlined"
-            color="primary"
-            fullWidth
-            sx={{
-              borderRadius: "50px",
-              textTransform: "none",
-              fontWeight: "bold",
-              padding: "0.75rem",
-              fontSize: "1rem",
-            }}
-            onClick={() => navigate({to: `/eventi/${evento._id}`,})}
-          >
-            Ulteriori informazioni
-          </Button>
-        </Box>
+        {eventoPassato ? (
+  <Button
+    variant="contained"
+    color="error"
+    fullWidth
+    sx={{
+      borderRadius: "50px",
+      textTransform: "none",
+      fontWeight: "bold",
+      padding: "0.75rem",
+      fontSize: "1rem",
+    }}
+  >
+    Evento finito
+  </Button>
+) : (
+  <Button
+    variant="outlined"
+    color="primary"
+    fullWidth
+    sx={{
+      borderRadius: "50px",
+      textTransform: "none",
+      fontWeight: "bold",
+      padding: "0.75rem",
+      fontSize: "1rem",
+    }}
+    onClick={() => navigate({ to: `/eventi/${evento._id}` })}
+  >
+    Ulteriori informazioni
+  </Button>
+)}
       </CardContent>
     </Card>
   );

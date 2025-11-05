@@ -15,7 +15,9 @@ export interface IEvent {
     duration: {hours:number, minutes:number};
     city: string;
     short_description:string;
-    category:string
+    category:string;
+    people:Int32Array;
+    image:string;
 }
 
 export type EventsQueryParams = { 
