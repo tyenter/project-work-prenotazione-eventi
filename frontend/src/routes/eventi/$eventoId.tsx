@@ -41,6 +41,7 @@ function RouteComponent() {
   interface IDefaultValues {
     people: number
   }
+
   const defaultPeople: IDefaultValues = { people: 1 }
 
   const formOpts = formOptions({
@@ -86,7 +87,7 @@ function RouteComponent() {
 
   return (
     <>
-      {/*Banner in alto */}
+      {/* Banner in alto */}
       <Box
         sx={{
           background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
@@ -97,14 +98,71 @@ function RouteComponent() {
           mb: 5,
         }}
       >
-        <Box sx={{ fontSize: 60, mb: 1 }}>🎟️</Box>
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 100,
+            height: 100,
+            borderRadius: '50%',
+            backgroundColor: 'white',
+            mb: 2,
+            boxShadow: '0 6px 15px rgba(0,0,0,0.2)',
+          }}
+        >
+          <Box
+            sx={{
+              width: 50,
+              height: 30,
+              backgroundColor: '#42a5f5',
+              borderRadius: 2,
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                top: -6,
+                left: -6,
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                backgroundColor: 'white',
+              }}
+            />
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: -6,
+                right: -6,
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                backgroundColor: 'white',
+              }}
+            />
+            <Box
+              sx={{
+                width: '60%',
+                height: 3,
+                backgroundColor: 'white',
+                borderRadius: 1,
+              }}
+            />
+          </Box>
+        </Box>
+
         <Typography variant="h3" fontWeight="bold">
           {event.title}
         </Typography>
         <Typography
           variant="h6"
           sx={{
-            maxWidth: 700,
+            maxWidth: 800,
             mx: 'auto',
             mt: 1,
             opacity: 0.9,
@@ -125,7 +183,6 @@ function RouteComponent() {
           pb: 8,
         }}
       >
-        
         <Card sx={{ maxWidth: 800, width: '100%', boxShadow: 5, borderRadius: 3 }}>
           <CardHeader
             avatar={<EventAvailableIcon color="primary" sx={{ fontSize: 40 }} />}
@@ -133,25 +190,25 @@ function RouteComponent() {
             titleTypographyProps={{ variant: 'h5', fontWeight: 'bold' }}
           />
           <Divider />
-          <CardMedia
-        component="img"
-        width={"100"}
-        height="450"
-        image={event.image}
-        alt={event.title}
-        sx={{
-          objectFit: 'cover',
-          borderRadius: 3,     
-          mx: 2,                
-          mt: 2,            
-          mb: 1,                
-          boxShadow: 2,         
-        }}
-      />
+
+          <Box sx={{ px: 2, pt: 2 }}>
+            <CardMedia
+              component="img"
+              height="450"
+              image={event.image}
+              alt={event.title}
+              sx={{
+                objectFit: 'cover',
+                borderRadius: 3,
+                width: '100%',
+                boxShadow: 2,
+              }}
+            />
+          </Box>
 
           <CardContent>
             <Stack spacing={2}>
-              {/* 🔹 Info principali */}
+              {/* Info */}
               <Stack direction="row" spacing={1} alignItems="center">
                 <AccessTimeIcon color="primary" />
                 <Typography variant="body1">
