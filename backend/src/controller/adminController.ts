@@ -1,141 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
-import { credsSchema, refreshTokenSchema, userInfoSchema } from './joiSchemas';
-import { BadRequest, Unauthorized } from '../errors/errors';
-import { AuthService } from '../service/authService';
-import jwt from "jsonwebtoken"; 
-import { JWT_REFRESH_SECRET } from '../config';
+import { objectIdSchema } from './joiSchemas';
+import { BadRequest } from '../errors/errors';
+import { AdminService } from '../service/adminService';
 
 export class AdminController {
 
+    private adminService = new AdminService()
 
-    public adminCheck = async (req: Request, res: Response, next: NextFunction): Promise<void>  => {
-        res.status(200).json("OK")
-    }
-    /*
-
-    private authService = new AuthService()
-
-    public manageLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        try{
-            const body = req.body
-
-            if(!req.body.email || !req.body.password)
-                throw new BadRequest("email or password missing")
-
-            const credentials = {
-                email: req.body.email,
-                password: req.body.password
-            }
-            const {error} = credsSchema.validate(credentials,{ stripUnknown: true })
-            if(error)
-                throw new Unauthorized("invalid credentials")
-
-            const {accessToken, refreshToken} =
-                await this.authService.handleLogin(credentials.email,credentials.password)
-
-            // refresh token
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict",
-                path: "/auth",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
-            });
-
-            // access token
-            res.status(200).json({ accessToken });
-        }catch(err){
-            console.error("Login Error: ",err)
-            next(err)
-        }
+    public adminCheck = async (_: Request, res: Response): Promise<void>  => {
+        res.sendStatus(200)
     }
 
-    public manageRefresh = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        try{
-            const refreshToken = req.cookies.refreshToken;
-            if (!refreshToken) 
-               throw new Unauthorized("No refresh token");
-
-            const {error} = refreshTokenSchema.validate(refreshToken)
-            if(error)
-                throw new Unauthorized("invalid refresh token")
-
-            try {
-                jwt.verify(refreshToken, JWT_REFRESH_SECRET);
-            } catch (err) {
-                throw new Unauthorized("invalid refresh token");
-            }
-
-            const {accessToken, newRefreshToken} = 
-                await this.authService.handleRefresh(refreshToken)
-
-            // nuovo refresh token
-            res.cookie("refreshToken", newRefreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict",
-                path: "/auth",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
-            });
-
-            // nuovo access token
-            res.status(200).json({ accessToken });
-        }catch(err){
-            console.error("Refresh Error: ",err)
-            next(err)
-        }
-    }
-
-    public manageSignup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public removeSingleEventById = async (req: Request, res: Response, next: NextFunction): Promise<void>  => {
         try {
-            const userInfo = req.body
+            const eventId: string | undefined = req.params.event_id
 
-            const {error, value: validUserInfo} = 
-                userInfoSchema.validate(userInfo, { stripUnknown: true })
+            const {error} = objectIdSchema.validate(eventId)
             if(error)
-                throw new BadRequest("invalid user info") 
-            
-            const {accessToken, refreshToken} = 
-                await this.authService.handleSignup(validUserInfo)
+                throw new BadRequest("invalid id")
 
-            // refresh token
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict",
-                path: "/auth",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
-            });
+            await this.adminService.removeEventById(eventId!)
 
-            // access token
-            res.status(200).json({ accessToken });
-        } catch(err: any){
-            console.error("Signup Error: ",err)
-            next(err)
+            res.status(200).json("OK")
+        } catch(err){
+            next()
         }
     }
-
-    public manageLogout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        try {
-            
-            const refreshToken = req.cookies.refreshToken;
-            if (!refreshToken) 
-               res.sendStatus(200);
-            
-            await this.authService.handleLogout(refreshToken)
-
-            res.clearCookie('refreshToken', {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                path: '/auth', 
-            });
-
-            res.sendStatus(200);
-        } catch(err: any){
-            console.error("Logout Error: ",err)
-            next(err)
-        }
-    }
-        */
 }

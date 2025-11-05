@@ -3,7 +3,7 @@ import { apiEvents } from "../api/httpEventi"
 import type { IBookEvent } from "../models/models"
 
 export function useUseMutations(){
-  const {  bookEvent } = apiEvents()
+  const {  bookEvent, removeEvent } = apiEvents()
 
   const useBookEventMutation = useMutation({
         mutationKey: ['bookEvent'],
@@ -11,7 +11,14 @@ export function useUseMutations(){
         retry: 1,
     })
 
+  const useRemoveEventMutation = useMutation({
+      mutationKey: ['removeEvent'],
+      mutationFn: async (eventId: string) => await removeEvent(eventId),
+      retry: 1,
+    })
+
   return {
-    bookEventMutation: useBookEventMutation
+    bookEventMutation: useBookEventMutation,
+    removeEventMutation: useRemoveEventMutation
   }
 }

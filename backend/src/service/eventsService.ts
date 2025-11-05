@@ -8,7 +8,7 @@ export class EventsService {
     
     public async getEvents(query: IEventsQuery): Promise<IEventsRes>{
         const db = await connectDB()
-        const eventsColletion = db.collection<IEvent>(COLLECTION_EVENTI);
+        const eventsCollection = db.collection<IEvent>(COLLECTION_EVENTI);
 
         const paginationFilled = {
             page: query.page ? Number(query.page) : 1,
@@ -27,7 +27,7 @@ export class EventsService {
             }
         }
 
-        const totElems = await eventsColletion.countDocuments(titleRegex)
+        const totElems = await eventsCollection.countDocuments(titleRegex)
         const totPages = Math.ceil(totElems / paginationFilled.size)
 
         const fullPagination: IPagination = {
@@ -36,7 +36,7 @@ export class EventsService {
             totPages: totPages
         }
 
-        const events: IEvent[] = await eventsColletion
+        const events: IEvent[] = await eventsCollection
                             .find(titleRegex)
                             .sort({ date: -1 })
                             .skip((fullPagination.page - 1) * fullPagination.size)
@@ -52,11 +52,11 @@ export class EventsService {
 
     public async getEventById(id: string): Promise <IEvent>{
         const db = await connectDB()
-        const eventsColletion = db.collection<IEvent>(COLLECTION_EVENTI);
+        const eventsCollection = db.collection<IEvent>(COLLECTION_EVENTI);
 
         const eventId = new ObjectId(id)
 
-        const event: IEvent | null = await eventsColletion
+        const event: IEvent | null = await eventsCollection
                                 .findOne({_id: eventId})
         
         if(!event)
