@@ -17,7 +17,6 @@ export interface IEvent {
     city: string;
     short_description:string;
     category:string;
-    people:Int32Array;
     image:string;
 }
 

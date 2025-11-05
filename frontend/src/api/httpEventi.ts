@@ -1,19 +1,19 @@
 import { useAxios } from "../hooks/useAxios"
 import type { EventsQueryParams, IBookEvent, IEvent, IEventsRes } from "../models/models"
-import axiosClient from "./axiosClient"
+import axiosClientNoToken from "./axiosClientNoToken"
 
 
 export function apiEvents() {
-  const axiosClientWithAuth = useAxios()
+  const axiosClient = useAxios()
 
   const getEventById = async (eventId: string): Promise<IEvent> => 
-    (await (axiosClient.get(`/eventi/${eventId}`))).data
+    (await (axiosClientNoToken.get(`/eventi/${eventId}`))).data
 
   const checkBooking = async (eventId: string): Promise<{isBooked: boolean}> => 
-    (await (axiosClientWithAuth.get(`/eventi/book/check/${eventId}`))).data
+    (await (axiosClient.get(`/eventi/book/check/${eventId}`))).data
 
   const bookEvent = async (body: IBookEvent): Promise<void> => {
-    await (axiosClientWithAuth.post(`/eventi/book/`,body))
+    await (axiosClient.post(`/eventi/book/`,body))
   }
   
   const getEvents = async (params: EventsQueryParams): Promise<IEventsRes> =>{
@@ -25,13 +25,17 @@ export function apiEvents() {
 
     const queryString = searchParams.toString() ? `?${searchParams.toString()}` : '';
 
-    return (await axiosClient.get(`/eventi${queryString}`)).data
+    return (await axiosClientNoToken.get(`/eventi${queryString}`)).data
   }
+
+  const removeEvent = async (eventId: string): Promise<void> => 
+    await axiosClient.post(`/admin/remove-event/${eventId}`)
   
   return {
     getEventById,
     checkBooking,
     bookEvent,
-    getEvents
+    getEvents,
+    removeEvent
   }
 }

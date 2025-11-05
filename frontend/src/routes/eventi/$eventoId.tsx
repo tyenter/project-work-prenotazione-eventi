@@ -59,6 +59,8 @@ function RouteComponent() {
         eventId: eventoId,
         people: value.people,
       })
+      // tmp aggiungi controllo error
+      // alert
       await refetch()
     },
   })

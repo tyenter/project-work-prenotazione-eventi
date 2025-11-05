@@ -21,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       fullWidth
       value={searchTerm}
       onChange={handleChange}
-      placeholder="Cerca..."
+      placeholder="Cerca evento..."
     />
   );
 };

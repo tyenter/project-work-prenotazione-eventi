@@ -9,7 +9,6 @@ import {
   Stack,
   Button,
   Box,
-  withTheme,
   CardMedia,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -19,10 +18,7 @@ import SearchBar from "../../components/Searchbar";
 import type { EventsQueryParams } from "../../models/models";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import type { IEvent } from "../../models/models";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CelebrationIcon from "@mui/icons-material/Celebration"
-
-
 
 
 export const Route = createFileRoute("/eventi/")({
