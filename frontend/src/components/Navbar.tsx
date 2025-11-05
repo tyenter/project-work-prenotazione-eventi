@@ -14,7 +14,7 @@ const Navbar = () => {
           Home
         </Button>
         {  !accessToken ?
-          <Button color="inherit" onClick={()=>navigate({to: "/login"})}>
+          <Button color="inherit" onClick={()=>navigate({to: "/login",search: { redirect: location.pathname + location.search }})}> 
             Login
           </Button>
             :<></>

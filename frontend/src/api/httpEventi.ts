@@ -25,8 +25,6 @@ export function apiEvents() {
 
     const queryString = searchParams.toString() ? `?${searchParams.toString()}` : '';
 
-    console.log("fulUrl: ",queryString)
-
     return (await axiosClient.get(`/eventi${queryString}`)).data
   }
   

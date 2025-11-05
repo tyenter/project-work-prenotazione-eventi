@@ -30,7 +30,7 @@ export const useAxios = (): AxiosInstance => {
           try {
             const { data } = await axiosClient.post('/auth/refresh', {}, { withCredentials: true });
 
-            if (!data?.accessToken) {
+            if (!data?.accessToken || typeof data.accessToken !== "string") {
               setAccessToken(null);
               return Promise.reject(new Error('No access token returned from refresh'));
             }

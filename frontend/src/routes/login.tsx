@@ -7,6 +7,9 @@ import type { TLoginError } from '../models/models';
 import { useState } from 'react';
 
 export const Route = createFileRoute('/login')({
+  validateSearch: (search) => ({
+    redirect: (search.redirect as string) || "/eventi",
+  }),
   beforeLoad: ({ context }) => {
     if (context.accessToken)
       throw redirect({to: '/eventi'})
@@ -16,6 +19,7 @@ export const Route = createFileRoute('/login')({
 
 function Login(){
     const navigate = useNavigate();
+    const { redirect } = Route.useSearch()
     const [alert, setAlert] = useState<string>()
     const login = authenticateMe("login")
 
@@ -52,7 +56,9 @@ function Login(){
                 return
             }
             
-            navigate({ to: `/eventi` })
+            setTimeout(()=>{
+                navigate({ to: redirect })
+            },300) 
         },
     })
 

@@ -16,7 +16,8 @@ declare module '@tanstack/react-router' {
 }
 
 function Providers() {
-  const {accessToken} = useAuth()
+  const {accessToken, setAccessToken} = useAuth()
+  const context: MyRouterContext = {accessToken,setAccessToken}
 
   const [queryClient] = React.useState(() => new QueryClient({
     defaultOptions: {
@@ -30,7 +31,7 @@ function Providers() {
 
   return (
     <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} context={{accessToken}} />
+        <RouterProvider router={router} context={context} />
     </QueryClientProvider>
   )
 }
