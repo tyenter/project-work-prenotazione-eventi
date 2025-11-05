@@ -6,6 +6,7 @@ import { ICredentials, IUserInfoPOST } from '../models/models';
 import { generateTokens, hashPassword, verifyPassword } from '../utils/functions';
 import crypto from "crypto";
 import sanitizeHtml from "sanitize-html";
+import { TOKEN_LIFE } from '../models/constants';
 
 
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
         const db = await connectDB()
         const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS);
         const now = new Date();
-        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 giorni
+        const expiresAt = new Date(now.getTime() + TOKEN_LIFE); 
 
         const normalizedEmail = email.toLowerCase()
 
@@ -53,7 +54,7 @@ export class AuthService {
         const db = await connectDB()
         const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS); 
         const now = new Date();
-        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 giorni
+        const expiresAt = new Date(now.getTime() + TOKEN_LIFE); 
 
         let newUser: ICredentials = {
             email: userInfo.email.toLowerCase(),
@@ -89,7 +90,7 @@ export class AuthService {
         const db = await connectDB()
         const credsColletion = db.collection<ICredentials>(COLLECTION_CREDS);
         const now = new Date();
-        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 giorni
+        const expiresAt = new Date(now.getTime() + TOKEN_LIFE);
 
         const hashedRefreshToken = this.hashToken(refreshToken)
 

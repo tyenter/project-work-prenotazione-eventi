@@ -4,6 +4,7 @@ import { BadRequest, Unauthorized } from '../errors/errors';
 import { AuthService } from '../service/authService';
 import jwt from "jsonwebtoken"; 
 import { ADMIN_EMAIL, JWT_REFRESH_SECRET } from '../config';
+import { COOKIE_LIFE } from '../models/constants';
 
 export class AuthController {
 
@@ -33,7 +34,7 @@ export class AuthController {
                 secure: true,
                 sameSite: "strict",
                 path: "/auth",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
+                maxAge: COOKIE_LIFE,
             });
 
             // access token
@@ -69,7 +70,7 @@ export class AuthController {
                 secure: true,
                 sameSite: "strict",
                 path: "/auth",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
+                maxAge: COOKIE_LIFE,
             });
 
             // nuovo access token
@@ -102,7 +103,7 @@ export class AuthController {
                 secure: true,
                 sameSite: "strict",
                 path: "/auth",
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 giorni
+                maxAge: COOKIE_LIFE,
             });
 
             // access token

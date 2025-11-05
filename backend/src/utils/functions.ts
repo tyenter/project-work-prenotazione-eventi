@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import { ADMIN_EMAIL, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
+import { TOKEN_LIFE } from "../models/constants";
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 12;
@@ -27,7 +28,7 @@ export const generateTokens = (userId: ObjectId, userEmail?: string, userRole?: 
 
   const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET!, {
     algorithm: "HS256",
-    expiresIn: "7d",
+    expiresIn: TOKEN_LIFE,
   });
 
   return { accessToken, refreshToken };
