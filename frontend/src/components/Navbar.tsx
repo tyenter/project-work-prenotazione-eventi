@@ -13,16 +13,18 @@ const Navbar = () => {
   
 
   
-  const user = {
-    firstName: 'Mario',
-    lastName: 'Rossi',
-  }
+  // const user = {
+  //   firstName: 'Mario',
+  //   lastName: 'Rossi',
+  // }
 
   return (
     <AppBar position="sticky">
       <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
+
+        
   <Box display="flex" alignItems="center">
-    {accessToken && user && (
+    {/* {accessToken && user && (
       <Box display="flex" flexDirection="column" alignItems="center" mr={2}>
         <Avatar
           sx={{
@@ -41,7 +43,7 @@ const Navbar = () => {
           {user.firstName} {user.lastName}
         </Typography>
       </Box>
-    )}
+    )} */}
 
     <Button color="inherit" onClick={() => navigate({ to: '/eventi' })}>
       Home
