@@ -23,7 +23,8 @@ export const generateTokens = (userId: ObjectId, userEmail?: string, userRole?: 
 
   const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET!, {
     algorithm: "HS256",
-    expiresIn: "3m" 
+    expiresIn: "1m" 
+    // expiresIn: "3m" 
   });
 
   const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET!, {
